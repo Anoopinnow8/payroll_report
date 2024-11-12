@@ -15,7 +15,6 @@ export const handleFileUpload = () => {
     redirect: "follow"
   };
 
-  console.log(requestOptions,"requestOptions");
   fetch(url, requestOptions)
     .then(response => response.text())
     .then(result => console.log("API Response:", result))

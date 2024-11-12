@@ -19,7 +19,10 @@ const DataFile = ({ uploadTabledata = [], convertedTableData = [], filename = ""
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  
+  const filteredData = uploadTabledata.filter((row) => {
+    return Object.values(row).some(value => value !== null && value !== undefined && value !== "");
+  });
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
@@ -47,7 +50,7 @@ const DataFile = ({ uploadTabledata = [], convertedTableData = [], filename = ""
             />
           </TabList>
         </Box>
-        <TabPanel value="1"><Table data={uploadTabledata} /></TabPanel>
+        <TabPanel value="1"><Table data={filteredData} isUploadTable={ true}/></TabPanel>
         <TabPanel value="2"><Table data={convertedTableData} /></TabPanel>
       </TabContext>
     </Box>

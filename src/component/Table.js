@@ -13,7 +13,9 @@ const truncateText = (text) => {
   return text;
 };
 
-const Table = ({ data = [] ,name=""}) => {
+const Table = ({ data = [], name = "",isUploadTable=false }) => {
+  console.log(data, "hrghjuh");
+
   const columns = useMemo(() => {
     if (!Array.isArray(data) || data.length === 0) return [];
     
@@ -29,13 +31,12 @@ const Table = ({ data = [] ,name=""}) => {
   }, [data]);
 
   const table = useReactTable({
-    data,
+    data:data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  console.log(columns, "columns");
-
+console.log("gturhguhj");
   return (
 
     data.length !== 0 ?(
@@ -69,7 +70,7 @@ const Table = ({ data = [] ,name=""}) => {
       </div>
     )
       : <div>
-        No data
+        No data 
       </div>
   );
 };
