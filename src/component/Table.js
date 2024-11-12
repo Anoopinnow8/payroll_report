@@ -40,7 +40,7 @@ const Table = ({ data = [] ,name=""}) => {
     data.length !== 0 && (
       <div className="table-container">
         {/* <img src={cross} alt="icon" className="cross"/> */}
-        <span className="filename">  Preview</span>
+       
         <table className="data-table">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
