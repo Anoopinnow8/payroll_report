@@ -23,14 +23,16 @@ const DataFile = ({ uploadTabledata = [], convertedTableData = [], filename = ""
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(value => value !== null && value !== undefined && value !== "");
   });
-  
+  const convertedfilteredData = convertedTableData.filter((row) => {
+    return Object.values(row).some(value => value !== null && value !== undefined && value !== "");
+  });
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="">
             <Tab 
-              label={truncateText(filename ? filename : "Uploaded File")} 
+              label="Labor Payroll Report"
               value="1" 
               sx={{
                 maxWidth: '50%', 
@@ -40,7 +42,7 @@ const DataFile = ({ uploadTabledata = [], convertedTableData = [], filename = ""
               }} 
             />
             <Tab 
-              label={truncateText(filename ? filename : "Converted File")} 
+             label="Converted Labor Payroll Report" 
               value="2" 
               sx={{
                 maxWidth: '50%',
@@ -51,8 +53,8 @@ const DataFile = ({ uploadTabledata = [], convertedTableData = [], filename = ""
             />
           </TabList>
         </Box>
-        <TabPanel value="1"><Table data={filteredData} isUploadTable={true} dataToRender={ uploadTabledata.slice(1)}/></TabPanel>
-        <TabPanel value="2"><Table data={convertedTableData} dataToRender={ convertedTableData}/></TabPanel>
+        <TabPanel value="1"><Table data={filteredData} isUploadTable={true} dataToRender={ filteredData.slice(1)}/></TabPanel>
+        <TabPanel value="2"><Table data={convertedfilteredData} dataToRender={ convertedfilteredData}/></TabPanel>
       </TabContext>
     </Box>
   );
