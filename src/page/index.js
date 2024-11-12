@@ -1,19 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import Papa from "papaparse";
-import Table from "../component/Table";
-import preview from "../assets/image/eye.png";
-import fileimage from "../assets/image/document.png";
-import deleteicon from "../assets/image/delete.png";
 import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DataFile from "./DataFile";
+import Loader from "../component/Loader";
 
 const Main = () => {
   const [uploadFile, setUploadFile] = useState(null);
-  const [jsonData, setJsonData] = useState(null);
-  const [showUploadFile, setShowUploadFile] = useState(false);
+  const [jsonData, setJsonData] = useState([]);
+  const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
-  const [isConverting, setIsConverting] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+
   const fileInputRef = useRef(null);
 
   const handleUploadClick = () => {
@@ -65,19 +64,10 @@ const Main = () => {
     }
   };
 
-  const handleShowPreview = () => {
-    setShowUploadFile(true);
-  };
-
-  const handleRemoveUploaded = () => {
-    setUploadFile(null);
-    setJsonData(null);
-    setShowUploadFile(false);
-  };
-
   const handleFileConvert = () => {
     if (!uploadFile) return;
-    setIsConverting(true)
+    setisLoading(true);
+
     const url = "https://csv-convertor.onrender.com/convert/";
     const formdata = new FormData();
     formdata.append("input", uploadFile, uploadFile.name);
@@ -99,11 +89,10 @@ const Main = () => {
       .catch((error) => {
         console.log("API error:", error);
         toast.error("Oops! Something went wrong.");
-      }
-      )
-      .finally(
-        setIsConverting(false)
-      );
+      })
+      .finally(() => {
+        setisLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -114,8 +103,7 @@ const Main = () => {
           Papa.parse(csvData, {
             header: true,
             complete: (result) => {
-              setJsonData(result.data);
-              handleShowPreview();
+              setConvertJsonData(result.data);
             },
             error: (error) => {
               console.error("Error parsing converted file:", error);
@@ -127,7 +115,6 @@ const Main = () => {
         );
     }
   }, [convertedFileUrl]);
-
   return (
     <div className="main-container">
       <div className="header">
@@ -137,7 +124,7 @@ const Main = () => {
             onClick={handleUploadClick}
             disabled={uploadFile}
           >
-            Upload CSV
+            Upload File
           </button>
           <input
             type="file"
@@ -146,77 +133,23 @@ const Main = () => {
             accept=".csv, .xlsx"
             onChange={handleFileUpload}
           />
-          {uploadFile && (
-            <>
-              <div className="upload-data">
-                <span className="file-name">
-                  {<img src={fileimage} alt="file icon" />}
-                  {uploadFile.name}
-                </span>
-                {!convertedFileUrl && (
-                  <>
-                    <img
-                      src={preview}
-                      alt="preview"
-                      className="preview"
-                      onClick={handleShowPreview}
-                    />
-                    <img
-                      src={deleteicon}
-                      alt="delete icon"
-                      className="deleteicon"
-                      onClick={handleRemoveUploaded}
-                    />
-                  </>
-                )}
-              </div>
-            </>
-          )}
         </div>
         <div className="upload-box">
-        <button
-          className="button convert"
-          disabled={!jsonData}
-          onClick={handleFileConvert}
-        >
-        {isConverting?"Converting...":  "Convert"}
+          <button
+            className="button convert"
+            disabled={uploadFile ? false : true}
+            onClick={handleFileConvert}
+          >
+            {isLoading ? "Converting..." : "Convert File"}
           </button>
-          {convertedFileUrl && (
-            <>
-              <div className="upload-data">
-                <span className="file-name">
-                  {<img src={fileimage} alt="file icon" />}
-                  {uploadFile.name}
-                </span>
-              
-                  <>
-                    <img
-                      src={preview}
-                      alt="preview"
-                      className="preview"
-                      onClick={handleShowPreview}
-                    />
-                    <img
-                      src={deleteicon}
-                      alt="delete icon"
-                      className="deleteicon"
-                      onClick={handleRemoveUploaded}
-                    />
-                  </>
-               
-              </div>
-            </>
-          )}
-
         </div>
-        </div>
-
-      {showUploadFile && (
-        <span className="filename">
-          {convertedFileUrl ? "Converted file view" : "Uploaded file view"}
-        </span>
-      )}
-      {showUploadFile && jsonData && <Table data={jsonData} />}
+      </div>
+      {isLoading && <Loader />}
+      <DataFile
+        uploadTabledata={jsonData}
+        convertedTableData={convertjsonData}
+        filename={uploadFile?.name}
+      />
     </div>
   );
 };

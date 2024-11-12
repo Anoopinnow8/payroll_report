@@ -37,9 +37,10 @@ const Table = ({ data = [] ,name=""}) => {
   console.log(columns, "columns");
 
   return (
-    data.length !== 0 && (
+
+    data.length !== 0 ?(
       <div className="table-container">
-        {/* <img src={cross} alt="icon" className="cross"/> */}
+       
        
         <table className="data-table">
           <thead>
@@ -67,6 +68,9 @@ const Table = ({ data = [] ,name=""}) => {
         </table>
       </div>
     )
+      : <div>
+        No data
+      </div>
   );
 };
 
