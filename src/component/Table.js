@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   flexRender
 } from '@tanstack/react-table';
-import cross from "../assets/image/cross.png";
 
 const truncateText = (text) => {
   if (text && text.length > 23) {
@@ -13,12 +12,25 @@ const truncateText = (text) => {
   return text;
 };
 
-const Table = ({ data = [], name = "",isUploadTable=false }) => {
-  console.log(data, "hrghjuh");
+const Table = ({ data = [],dataToRender=[], name = "", isUploadTable = false }) => {
+
 
   const columns = useMemo(() => {
     if (!Array.isArray(data) || data.length === 0) return [];
-    
+
+    if (isUploadTable) {
+      const firstRow = data[0];  
+      return Object.keys(firstRow).map((key) => ({
+        id: JSON.stringify(key),
+        accessorKey: key,
+        header: truncateText(firstRow[key]),
+        cell: ({ row }) => {
+          const cellData = row.original[key];
+          return truncateText(cellData); 
+        },
+      }));
+    }
+
     return Object.keys(data[0]).map((key) => ({
       id: JSON.stringify(key),
       accessorKey: key,
@@ -28,15 +40,15 @@ const Table = ({ data = [], name = "",isUploadTable=false }) => {
         return truncateText(cellData); 
       },
     }));
-  }, [data]);
+  }, [data, isUploadTable]);
 
   const table = useReactTable({
-    data:data,
+    data: dataToRender, 
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-console.log("gturhguhj");
+
   return (
 
     data.length !== 0 ?(
