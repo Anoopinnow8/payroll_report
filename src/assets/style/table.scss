@@ -1,81 +1,81 @@
+.table-container {
+  // height: 49vh;
+  // width: 100%;
+  overflow-y: scroll;
+  margin-top: 16px;
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 
-  .table-container {
-    // height: 49vh;
-    // width: 100%;
-    background: rgb(204, 202, 202);
-    overflow-y: scroll;
-    margin-top: 16px;
-    &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
+  &::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
 
-    &::-webkit-scrollbar-track {
-      background: #ffffff;
-    }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
 
-    &::-webkit-scrollbar-thumb {
-      background: #888;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-    table {
-      thead {
-        display: flex;
-        width: 100%;
-        position: sticky;
-        top: 0;
-        // background: #fff;
-       
-        tr {
-          display: flex;
-          align-items: center;
-          height: 50px;
-          border: 1px solid #e0e0e0;
-          th {
-            width: 200px;
-            padding: 6px;
-            border: 1px solid #f8f8f8;
-            font: 600 14px/24px 'Montserrat', sans-serif;
-            color: #333333;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
-            text-align: left;
-    
-          
-
-           
-          }
-        }
-      }
-    }
-    tbody {
-      display: grid;
-      position: relative;
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .filename{
+    margin-bottom: 15px;
+    font-size: 24px;
+    letter-spacing: 0.5px;
+  }
+  table {
+    thead {
+      display: flex;
       width: 100%;
+      position: sticky;
+      top: 0;
+      // background: #fff;
 
       tr {
-        &:nth-child(odd) {
-          background-color: #f2f2f2;
-        }
-
-        &:nth-child(even) {
-          background-color: #fff;
-        }
-
-        td {
-          padding: 11px;
+        display: flex;
+        align-items: center;
+        height: 50px;
+        border: 1.5px solid #e0e0e0;
+        th {
           width: 200px;
-          font: 500 13.5px/13.5px 'Teko', sans-serif;
+          padding: 6px;
+          border: 1px solid #f8f8f8;
+          font: 600 14px/24px "Montserrat", sans-serif;
           color: #333333;
           border: 1px solid #e0e0e0;
           border-radius: 2px;
           text-align: left;
-          
+          height: 20px;
+
         }
       }
     }
   }
+  tbody {
+    display: grid;
+    position: relative;
+    width: 100%;
 
+    tr {
+      &:nth-child(odd) {
+        background-color: #f2f2f2;
+      }
+
+      &:nth-child(even) {
+        background-color: #fff;
+      }
+
+      td {
+        width: 200px;
+        padding: 6px;
+        border: 1px solid #f8f8f8;
+        font: 500 13px/24px "Montserrat", sans-serif;
+        color: #333333;
+        border: 1px solid #e0e0e0;
+        border-radius: 2px;
+        text-align: left;
+      }
+    }
+  }
+}

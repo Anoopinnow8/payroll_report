@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import Papa from "papaparse";
 import Table from "../component/Table";
-import preview from "../assets/image/info.png";
+import preview from "../assets/image/eye.png";
+import fileimage from "../assets/image/document.png";
 
 const Main = () => {
   const [uploadFile, setUploadFile] = useState(null);
@@ -17,7 +18,7 @@ const Main = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type === "text/csv") {
+    if (file &&( file.type === "text/csv" ||  file.type === "text/xlsx")) {
       Papa.parse(file, {
         header: true,
         complete: (result) => {
@@ -87,7 +88,7 @@ const Main = () => {
           {uploadFile && (
             <>
               <div className="upload-data">
-                <span className="file-name"> {uploadFile.name}</span>
+                <span className="file-name"> { <img src={fileimage} alt="fileicon" />}{uploadFile.name}</span>
                 <img
                   src={preview}
                   alt="preview"
@@ -107,8 +108,7 @@ const Main = () => {
           Convert
         </button>
       </div>
-
-      {showUploadFile && jsonData && <Table data={jsonData} />}
+      {showUploadFile && jsonData && <Table data={jsonData} name={uploadFile.name} />}
     </div>
   );
 };

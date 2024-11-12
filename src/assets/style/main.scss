@@ -20,12 +20,18 @@ align-items: center;
     .upload-data{
      padding: 10px;
      border-radius: 10px;
-     background-color: rgb(218, 218, 221);
-     border: 1px solid black;
+     background-color: rgb(232, 232, 235);
+     border: 2px solid rgb(202, 202, 202);
      position: relative;
      .file-name{
        font-size: 16px;
-     
+       align-items: center;
+       display: flex;
+       gap: 4px;
+     .fileicon{
+       width: 24px;
+       height: 24px;
+     }
      
      }
      .preview{
@@ -39,6 +45,11 @@ align-items: center;
     }
  }
 }
+}
+.cross-icon{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 .button{
@@ -56,6 +67,6 @@ align-items: center;
   &:disabled {
   
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 }
