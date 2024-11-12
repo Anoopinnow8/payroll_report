@@ -6,14 +6,17 @@ import "react-toastify/dist/ReactToastify.css";
 import DataFile from "./DataFile";
 import Loader from "../component/Loader";
 import { handleFileConvert } from "../api/FileApi";
+import { useNavigate } from "react-router";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [uploadFile, setUploadFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [isLoading, setisLoading] = useState(false);
-
+ 
   const fileInputRef = useRef(null);
 
   const handleUploadClick = () => {
@@ -21,6 +24,10 @@ const Home = () => {
       fileInputRef.current.click();
     }
   };
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login')
+}
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -93,6 +100,15 @@ const Home = () => {
   return (
     <div className="main-container">
       <div className="header">
+       
+        <button
+            className="button logout"
+            onClick={handleLogout}
+           
+          >
+          Logout
+          </button>
+        <div className="file-button-box"> 
         <div className="upload-box">
           <button
             className="button"
@@ -113,11 +129,12 @@ const Home = () => {
           <button
             className="button convert"
             disabled={uploadFile ? false : true}
-            onClick={onFileConvert} // Call the imported function
+            onClick={onFileConvert} 
           >
             {isLoading ? "Converting..." : "Convert File"}
           </button>
-        </div>
+          </div>
+          </div>
       </div>
       {isLoading && <Loader />}
       <DataFile

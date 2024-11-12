@@ -9,8 +9,7 @@ export const handleFileConvert = async (
   setisLoading(true);
 
   const accessToken = localStorage.getItem("access_token");
-
-  const url = "https://n4om1187nj.execute-api.us-east-2.amazonaws.com/dev/convert/";
+  const {REACT_APP_BASE_URL} = process.env;
   const formdata = new FormData();
   formdata.append("input", uploadFile, uploadFile.name);
 
@@ -24,7 +23,7 @@ export const handleFileConvert = async (
   };
 
   try {
-    const response = await fetch(url, requestOptions);
+    const response = await fetch(REACT_APP_BASE_URL, requestOptions);
     const result = await response.json();
 
     if (result.file_url) {
