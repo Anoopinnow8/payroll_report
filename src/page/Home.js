@@ -5,8 +5,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DataFile from "./DataFile";
 import Loader from "../component/Loader";
+import { handleFileConvert } from "../api/FileApi";
 
-const Main = () => {
+const Home = () => {
   const [uploadFile, setUploadFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
   const [convertjsonData, setConvertJsonData] = useState([]);
@@ -64,35 +65,8 @@ const Main = () => {
     }
   };
 
-  const handleFileConvert = () => {
-    if (!uploadFile) return;
-    setisLoading(true);
-
-    const url = "https://csv-convertor.onrender.com/convert/";
-    const formdata = new FormData();
-    formdata.append("input", uploadFile, uploadFile.name);
-
-    const requestOptions = {
-      method: "POST",
-      body: formdata,
-      redirect: "follow"
-    };
-
-    fetch(url, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.file_url) {
-          setConvertedFileUrl(result.file_url);
-          toast.success("File converted successfully");
-        }
-      })
-      .catch((error) => {
-        console.log("API error:", error);
-        toast.error("Oops! Something went wrong.");
-      })
-      .finally(() => {
-        setisLoading(false);
-      });
+  const onFileConvert = () => {
+    handleFileConvert(uploadFile, setConvertedFileUrl, setisLoading);
   };
 
   useEffect(() => {
@@ -139,7 +113,7 @@ const Main = () => {
           <button
             className="button convert"
             disabled={uploadFile ? false : true}
-            onClick={handleFileConvert}
+            onClick={onFileConvert} // Call the imported function
           >
             {isLoading ? "Converting..." : "Convert File"}
           </button>
@@ -155,4 +129,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Home;

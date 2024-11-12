@@ -1,11 +1,14 @@
 import './App.css';
-import Main from './page';
 import { Slide, ToastContainer } from 'react-toastify'
+import { BrowserRouter } from "react-router-dom";
+import RouteContainer from './routes/RouteContainer';
 
 function App() {
   return (
     <div className="App">
-      <Main />
+      <BrowserRouter>
+        <RouteContainer/>
+    
       <ToastContainer
           closeOnClick
           theme="colored"
@@ -15,6 +18,7 @@ function App() {
           transition={Slide}
           closeButton={false}
         />
+          </BrowserRouter>
     </div>
   );
 }
