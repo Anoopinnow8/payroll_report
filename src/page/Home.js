@@ -7,6 +7,7 @@ import DataFile from "./DataFile";
 import Loader from "../component/Loader";
 import { handleFileConvert } from "../api/FileApi";
 import { useNavigate } from "react-router";
+import { saveAs } from "file-saver";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -76,6 +77,16 @@ const Home = () => {
     handleFileConvert(uploadFile, setConvertedFileUrl, setisLoading);
   };
 
+  const handleConvertFileDownload = () => {
+    fetch(convertedFileUrl)
+    .then((response) => response.blob()) 
+    .then((blob) => {
+      const filename = convertedFileUrl.split('/').pop(); 
+      saveAs(blob, filename); 
+    })
+    .catch((error) => console.error("Error downloading the file:", error));
+  }
+
   useEffect(() => {
     if (convertedFileUrl) {
       fetch(convertedFileUrl)
@@ -96,7 +107,6 @@ const Home = () => {
         );
     }
   }, [convertedFileUrl]);
-
   return (
     <div className="main-container">
       <div className="header">
@@ -141,6 +151,8 @@ const Home = () => {
         uploadTabledata={jsonData}
         convertedTableData={convertjsonData}
         filename={uploadFile?.name}
+        onDownload={handleConvertFileDownload}
+        isFileConvert={convertedFileUrl}
       />
     </div>
   );
