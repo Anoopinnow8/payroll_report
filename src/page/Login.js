@@ -96,7 +96,7 @@ const Login = () => {
           <span className="title">Hey friend! Welcome back</span>
           <form onSubmit={handleSubmit}>
             <InputField
-              label="Name"
+              label="User Name"
               type="text"
               name="username"
               placeholder="Enter your username"
