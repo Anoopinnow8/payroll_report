@@ -73,13 +73,11 @@
 }
 
 
-.download-box{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  margin-bottom: 2px;
+  
   .download{
     cursor: pointer;
+    position: absolute;
+    z-index: 999;
+    right: 24px;
+    top: 20px;
   }
-}

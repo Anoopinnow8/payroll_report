@@ -65,14 +65,12 @@ const DataFile = ({
         </TabPanel>
         <TabPanel value="2">
           {isFileConvert && (
-            <div className="download-box">
-              <img
-                src={download}
-                alt="download"
-                className="download"
-                onClick={onDownload}
-              />
-            </div>
+            <img
+              src={download}
+              alt="download"
+              className="download"
+              onClick={onDownload}
+            />
           )}
 
           <Table
