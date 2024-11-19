@@ -24,11 +24,34 @@ const DataFile = ({
       (value) => value !== null && value !== undefined && value !== ""
     );
   });
+
+  const filterDataArray = (filteredData) => {
+    let result = []
+    for (let i = 0; i < filteredData.length; i++) {
+      const arrEle = filteredData[i];
+      let arr = []
+      for (let j = 0; j < arrEle.length; j++) {
+        const e = arrEle[j];
+        if (j === 1 && e == null) {
+          arr.push(arrEle[0])
+          continue
+        }
+        arr.push(e)
+      }
+      result.push(arr)
+    }
+
+    return result
+  };
+  const newArray = filterDataArray(filteredData);
+
   const convertedfilteredData = convertedTableData.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
     );
   });
+  console.log(uploadTabledata, "uploadTabledata");
+
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -60,7 +83,7 @@ const DataFile = ({
           <Table
             data={filteredData}
             isUploadTable={true}
-            dataToRender={filteredData.slice(1)}
+            dataToRender={newArray.slice(1)}
           />
         </TabPanel>
         <TabPanel value="2">
