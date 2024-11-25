@@ -3,32 +3,34 @@ import { toast } from "react-toastify";
 export const handleFileConvert = async (
   uploadFile,
   setConvertedFileUrl,
-  setisLoading
+  setisLoading,
+  setLastConverted
 ) => {
   if (!uploadFile) return;
   setisLoading(true);
 
   const accessToken = localStorage.getItem("access_token");
-  const {REACT_APP_BASE_URL} = process.env;
+  const { REACT_APP_BASE_URL } = process.env;
   const formdata = new FormData();
-  const url=`${REACT_APP_BASE_URL}convert/`
+  const url = `${REACT_APP_BASE_URL}convert/`;
   formdata.append("input", uploadFile, uploadFile.name);
 
   const requestOptions = {
     method: "POST",
     headers: {
-      "Authorization": `${accessToken}`,
+      "Authorization": `${accessToken}`
     },
     body: formdata,
-    redirect: "follow",
+    redirect: "follow"
   };
 
   try {
     const response = await fetch(url, requestOptions);
     const result = await response.json();
-
+    console.log(result, "result");
     if (result.file_url) {
       setConvertedFileUrl(result.file_url);
+      setLastConverted(result.updated_at);
       toast.success("File converted successfully");
     } else {
       toast.error("Conversion failed. No file URL returned.");

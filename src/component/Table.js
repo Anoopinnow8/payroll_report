@@ -5,7 +5,6 @@ import {
   flexRender
 } from "@tanstack/react-table";
 import Calender from "../assets/image/calendar.png";
-import DatePicker from "react-datepicker";
 
 const truncateText = (text) => {
   if (text && text.length > 23) {
@@ -25,10 +24,9 @@ const Table = ({
   onDownload = () => {},
   showDownload = false,
   handleSearchInput,
-  onAutomateClick = () => {}
+  onAutomateClick = () => {},
+  lastFileConverted
 }) => {
-  const [dateRange, setDateRange] = useState([null, null]);
-  const [startDate, endDate] = dateRange;
   const columns = useMemo(() => {
     if (!Array.isArray(tableColoum) || tableColoum.length === 0) return [];
 
@@ -66,6 +64,12 @@ const Table = ({
     <div className={`table-container ${isEmployeeTable ? "addemployee" : ""} `}>
       <div className="action-header">
         <div className="sort-action">
+          {showDownload && (
+            <div className="converted-info">
+              <span className="heading">Last Converted : </span>
+              <span className="info"> {lastFileConverted}</span>
+            </div>
+          )}
           <input
             type="text"
             placeholder="Search..."
@@ -73,22 +77,6 @@ const Table = ({
             onChange={handleSearchInput}
             className="search-box"
           />
-          <div className="date-picker">
-            <DatePicker
-              selected={startDate}
-              onChange={(update) => {
-                setDateRange(update);
-              }}
-              startDate={startDate}
-              endDate={endDate}
-              showMonthDropdown={true}
-              showYearDropdown={true}
-              selectsRange={true}
-              dateFormat="yyyy-MM-dd"
-              placeholderText="Select a date range"
-              isClearable
-            />
-          </div>
         </div>
         <div className="user-action">
           {showDownload && (
@@ -96,10 +84,6 @@ const Table = ({
               download
             </span>
           )}
-          <button className="automate-btn" onClick={onAutomateClick}>
-        
-            Automate
-          </button>
         </div>
       </div>
       <div className="table-wrapper">

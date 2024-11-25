@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -8,28 +8,31 @@ import Table from "../component/Table";
 import download from "../assets/image/download.png";
 import Employee from "./employee/Index";
 import { debounce, handleSearch } from "../utils/Common";
-import triggerApiRequest from "../api/AutomateApi";
-
+import { convertedFileByID,getlatest } from "../api/Function";
+import Papa from "papaparse";
+import * as XLSX from "xlsx";
 const DataFile = ({
   uploadTabledata = [],
   convertedTableData = [],
   filename = "",
   onDownload = () => {},
-  isFileConvert
+  isFileConvert,
+  lastFileConverted
 }) => {
   const [value, setValue] = useState("1");
-  const [uploadsearchQuery, setUploadSearchQuery] = useState('');
+  const [uploadsearchQuery, setUploadSearchQuery] = useState("");
+  const [previousConvertedData, setPrevConvertedData] = useState([]);
+  const [previousConvertedUrl, setPrevConvertedUrl] = useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-const debouncedSearch = debounce((query) => {
-}, 2000);
-const handleSearchInputChange = (e) => {
-  const query = e.target.value;
-  setUploadSearchQuery(query); 
-  debouncedSearch(query); 
-};
+  const debouncedSearch = debounce((query) => {}, 2000);
+  const handleSearchInputChange = (e) => {
+    const query = e.target.value;
+    setUploadSearchQuery(query);
+    debouncedSearch(query);
+  };
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
@@ -61,19 +64,39 @@ const handleSearchInputChange = (e) => {
     );
   });
 
-  const handleAutomate = async () => {
-    let id = localStorage.getItem("ID");
-    let date = {
-      "startDate": "6/03/2024",
-      "endDate": "8/22/2024"
-    };
+  const getLatestConvertedFile = async () => {
+  
     try {
-     const result=await triggerApiRequest(id,date)
-    } catch (error){
-      console.log(error,"Automate Error")
-   }
-}
-
+      const res = await getlatest();
+      if (res.status === 200) {
+        console.log(res.data.output_url,"jjjj")
+        setPrevConvertedUrl((res.data.output_url));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (previousConvertedData) {
+      fetch(previousConvertedUrl)
+        .then((response) => response.text())
+        .then((csvData) => {
+          Papa.parse(csvData, {
+            header: true,
+            complete: (result) => {
+              setPrevConvertedData(result.data);
+            },
+            error: (error) => {
+              console.error("Error parsing converted file:", error);
+            }
+          });
+        })
+        .catch((error) => console.log("Error fetching converted file:", error));
+    }
+  }, [previousConvertedUrl]);
+  useEffect(() => {
+    getLatestConvertedFile();
+  }, []);
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
@@ -126,7 +149,7 @@ const handleSearchInputChange = (e) => {
             dataToRender={convertedfilteredData}
             onDownload={onDownload}
             showDownload={isFileConvert}
-            onAutomateClick={handleAutomate}
+            lastFileConverted={lastFileConverted}
           />
         </TabPanel>
         <TabPanel value="3">

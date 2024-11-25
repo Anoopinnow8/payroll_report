@@ -13,8 +13,14 @@ const getIntiate = async (data) => {
   const url = `${REACT_APP_BASE_URL}/convert/initiate/`;
   return await makeApiCall("get", url, data,true);
 };
-
-
+const convertedFileByID = async (id) => {
+  const url = `${REACT_APP_BASE_URL}convert/${id}/`;
+  return await makeApiCall("get", url,true);
+};
+const getlatest = async (data) => {
+  const url = `${REACT_APP_BASE_URL}/convert/fetch-latest/`;
+  return await makeApiCall("get", url, data,true);
+};
 export {
-  createEmployee,getEmployee,getIntiate
+  createEmployee,getEmployee,getIntiate,convertedFileByID,getlatest
 }

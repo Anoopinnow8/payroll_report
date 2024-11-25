@@ -8,8 +8,8 @@ import { handleFileConvert } from "../api/FileApi";
 import { useNavigate } from "react-router";
 import { saveAs } from "file-saver";
 import Navbar from "../component/Navbar";
-import { getIntiate } from "../api/Function";
-
+import { convertedFileByID, getIntiate } from "../api/Function";
+import triggerApiRequest from "../api/AutomateApi";
 const Home = () => {
   const navigate = useNavigate();
 
@@ -17,6 +17,8 @@ const Home = () => {
   const [jsonData, setJsonData] = useState([]);
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
+  const [lastConverted, setLastConverted] = useState("");
+
   const [isLoading, setisLoading] = useState(false);
 
   const fileInputRef = useRef(null);
@@ -73,7 +75,19 @@ const Home = () => {
     }
   };
   const onFileConvert = () => {
-    handleFileConvert(uploadFile, setConvertedFileUrl, setisLoading);
+    handleFileConvert(
+      uploadFile,
+      setConvertedFileUrl,
+      setisLoading,
+      setLastConverted
+    );
+  };
+  const handleLastConverted = (data) => {
+    if (data) {
+      return data.split(" ")[1].slice(0, 5);
+    } else {
+      return " ";
+    }
   };
   const handleConvertFileDownload = () => {
     fetch(convertedFileUrl)
@@ -86,18 +100,31 @@ const Home = () => {
   };
   const getID = async () => {
     try {
-      const res = await getIntiate ();
-      if (res?.status===200) {
-        localStorage.setItem("ID",res?.data?.id)
+      const res = await getIntiate();
+      if (res?.status === 200) {
+        localStorage.setItem("ID", res?.data?.id);
       }
+    } catch (error) {
+      console.log("error", error);
     }
-    catch (error){
-      console.log("error",error);
+  };
+  const handleAutomate = async () => {
+    let id = localStorage.getItem("ID");
+    let data = {
+      id: id,
+      startDate: "6/03/2024",
+      endDate: "8/22/2024"
+    };
+    try {
+      const result = await triggerApiRequest(data);
+    } catch (error) {
+      console.log(error, "Automate Error");
     }
- }
+  };
+
   useEffect(() => {
     getID();
-},[])
+  }, []);
   useEffect(() => {
     if (convertedFileUrl) {
       fetch(convertedFileUrl)
@@ -126,6 +153,7 @@ const Home = () => {
         onConvertClick={onFileConvert}
         convertDisable={uploadFile ? false : true}
         onLogout={handleLogout}
+        onAutomate={handleAutomate}
       />
 
       <DataFile
@@ -134,6 +162,7 @@ const Home = () => {
         filename={uploadFile?.name}
         onDownload={handleConvertFileDownload}
         isFileConvert={convertedFileUrl}
+        lastFileConverted={handleLastConverted(lastConverted)}
       />
       {isLoading && <Loader />}
     </div>
