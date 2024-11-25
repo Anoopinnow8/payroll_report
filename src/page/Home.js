@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import DataFile from "./DataFile";
 import Loader from "../component/Loader";
 import { handleFileConvert } from "../api/FileApi";
 import { useNavigate } from "react-router";
 import { saveAs } from "file-saver";
+import Navbar from "../component/Navbar";
+import { getIntiate } from "../api/Function";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Home = () => {
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [isLoading, setisLoading] = useState(false);
- 
+
   const fileInputRef = useRef(null);
 
   const handleUploadClick = () => {
@@ -27,9 +28,8 @@ const Home = () => {
   };
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login')
-}
-
+    navigate("/login");
+  };
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
 
@@ -72,21 +72,32 @@ const Home = () => {
       }
     }
   };
-
   const onFileConvert = () => {
     handleFileConvert(uploadFile, setConvertedFileUrl, setisLoading);
   };
-
   const handleConvertFileDownload = () => {
     fetch(convertedFileUrl)
-    .then((response) => response.blob()) 
-    .then((blob) => {
-      const filename = convertedFileUrl.split('/').pop(); 
-      saveAs(blob, filename); 
-    })
-    .catch((error) => console.error("Error downloading the file:", error));
-  }
-
+      .then((response) => response.blob())
+      .then((blob) => {
+        const filename = convertedFileUrl.split("/").pop();
+        saveAs(blob, filename);
+      })
+      .catch((error) => console.error("Error downloading the file:", error));
+  };
+  const getID = async () => {
+    try {
+      const res = await getIntiate ();
+      if (res?.status===200) {
+        localStorage.setItem("ID",res?.data?.id)
+      }
+    }
+    catch (error){
+      console.log("error",error);
+    }
+ }
+  useEffect(() => {
+    getID();
+},[])
   useEffect(() => {
     if (convertedFileUrl) {
       fetch(convertedFileUrl)
@@ -102,51 +113,21 @@ const Home = () => {
             }
           });
         })
-        .catch((error) =>
-          console.error("Error fetching converted file:", error)
-        );
+        .catch((error) => console.log("Error fetching converted file:", error));
     }
   }, [convertedFileUrl]);
   return (
     <div className="main-container">
-      <div className="header">
-       
-        <button
-            className="button logout"
-            onClick={handleLogout}
-           
-          >
-          Logout
-          </button>
-        <div className="file-button-box"> 
-        <div className="upload-box">
-          <button
-            className="button"
-            onClick={handleUploadClick}
-            disabled={uploadFile}
-          >
-            Upload File
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            accept=".csv, .xlsx"
-            onChange={handleFileUpload}
-          />
-        </div>
-        <div className="upload-box">
-          <button
-            className="button convert"
-            disabled={uploadFile ? false : true}
-            onClick={onFileConvert} 
-          >
-            {isLoading ? "Converting..." : "Convert File"}
-          </button>
-          </div>
-          </div>
-      </div>
-      {isLoading && <Loader />}
+      <Navbar
+        onUploadClick={handleUploadClick}
+        uploadDisable={uploadFile}
+        fileInputRef={fileInputRef}
+        handleFileUpload={handleFileUpload}
+        onConvertClick={onFileConvert}
+        convertDisable={uploadFile ? false : true}
+        onLogout={handleLogout}
+      />
+
       <DataFile
         uploadTabledata={jsonData}
         convertedTableData={convertjsonData}
@@ -154,6 +135,7 @@ const Home = () => {
         onDownload={handleConvertFileDownload}
         isFileConvert={convertedFileUrl}
       />
+      {isLoading && <Loader />}
     </div>
   );
 };

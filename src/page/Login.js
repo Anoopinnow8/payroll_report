@@ -115,7 +115,7 @@ const Login = () => {
               image={passwordType?closeeye:openeye}
               handleIconClick={handleShowPassword}
             />
-            <button className="button" type="submit" disabled={isLoading}>
+            <button className="login-btn" type="submit" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>

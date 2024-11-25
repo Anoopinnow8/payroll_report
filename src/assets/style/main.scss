@@ -1,66 +1,70 @@
 @import "./table.scss";
 @import "./login.scss";
+@import "./employee.scss";
+@import "./navbar.scss";
+
+
 
 
 .main-container {
-  padding: 2rem;
+ // padding: 2rem;
   display: flex;
   flex-direction: column;
   height: 100vh;
   gap: 20px;
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    width: 100%;
-    padding:10px 14px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    .file-button-box{
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    .upload-box {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      .upload-data {
-        padding: 10px;
-        border-radius: 10px;
-        background-color: rgb(232, 232, 235);
-        border: 2px solid rgb(202, 202, 202);
-        position: relative;
-        .file-name {
-          font-size: 16px;
-          align-items: center;
-          display: flex;
-          gap: 4px;
-          .fileicon {
-            width: 24px;
-            height: 24px;
-          }
-        }
-        .preview {
-          position: absolute;
-          right: -26px;
-          top: -10px;
-          height: 20px;
-          width: 20px;
-          cursor: pointer;
-        }
-        .deleteicon {
-          position: absolute;
-          right: -26px;
-          top: 11px;
-          height: 20px;
-          width: 20px;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-  }
+  // .header {
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: space-between;
+  //   gap: 20px;
+  //   width: 100%;
+  //   padding:10px 14px;
+  //   border-radius: 10px;
+  //   margin-bottom: 20px;
+  //   .file-button-box{
+  //     display: flex;
+  //     align-items: center;
+  //     gap: 20px;
+  //   .upload-box {
+  //     display: flex;
+  //     flex-direction: column;
+  //     gap: 10px;
+  //     .upload-data {
+  //       padding: 10px;
+  //       border-radius: 10px;
+  //       background-color: rgb(232, 232, 235);
+  //       border: 2px solid rgb(202, 202, 202);
+  //       position: relative;
+  //       .file-name {
+  //         font-size: 16px;
+  //         align-items: center;
+  //         display: flex;
+  //         gap: 4px;
+  //         .fileicon {
+  //           width: 24px;
+  //           height: 24px;
+  //         }
+  //       }
+  //       .preview {
+  //         position: absolute;
+  //         right: -26px;
+  //         top: -10px;
+  //         height: 20px;
+  //         width: 20px;
+  //         cursor: pointer;
+  //       }
+  //       .deleteicon {
+  //         position: absolute;
+  //         right: -26px;
+  //         top: 11px;
+  //         height: 20px;
+  //         width: 20px;
+  //         cursor: pointer;
+  //       }
+  //     }
+  //   }
+  // }
+  // }
 }
 .cross-icon {
   width: 20px;
@@ -72,7 +76,7 @@
   font-size: 24px;
   letter-spacing: 0.5px;
 }
-.button {
+.login-btn {
   width: 120px;
   cursor: pointer;
   height: 40px;
@@ -81,21 +85,12 @@
   border: none;
   border-radius: 6px;
   font-size: 18px;
-  &.convert {
-    background-color: rgb(45, 146, 45);
-  }
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-  &.logout{
-    background-color: rgb(248, 52, 52);
-  }
+ 
 }
 
 .loader-main {
   position: fixed;
-  z-index: 99;
+  z-index: 99999;
   left: 0;
   top: 0;
   width: 100%;

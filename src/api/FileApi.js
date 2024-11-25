@@ -11,6 +11,7 @@ export const handleFileConvert = async (
   const accessToken = localStorage.getItem("access_token");
   const {REACT_APP_BASE_URL} = process.env;
   const formdata = new FormData();
+  const url=`${REACT_APP_BASE_URL}convert/`
   formdata.append("input", uploadFile, uploadFile.name);
 
   const requestOptions = {
@@ -23,7 +24,7 @@ export const handleFileConvert = async (
   };
 
   try {
-    const response = await fetch(REACT_APP_BASE_URL, requestOptions);
+    const response = await fetch(url, requestOptions);
     const result = await response.json();
 
     if (result.file_url) {

@@ -1,67 +1,118 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
+import Calender from "../assets/image/calendar.png";
+import DatePicker from "react-datepicker";
 
 const truncateText = (text) => {
   if (text && text.length > 23) {
-    return text.substring(0, 24) + '..'; 
+    return text.substring(0, 24) + "..";
   }
   return text;
 };
 
-const Table = ({ data = [],dataToRender=[], name = "", isUploadTable = false }) => {
-
-
+const Table = ({
+  tableColoum = [],
+  dataToRender = [],
+  name = "",
+  isUploadTable = false,
+  isEmployeeTable = false,
+  searchQuery = "",
+  setSearchQuery = () => {},
+  onDownload = () => {},
+  showDownload = false,
+  handleSearchInput,
+  onAutomateClick = () => {}
+}) => {
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
   const columns = useMemo(() => {
-    if (!Array.isArray(data) || data.length === 0) return [];
+    if (!Array.isArray(tableColoum) || tableColoum.length === 0) return [];
 
     if (isUploadTable) {
-      const firstRow = data[0];  
+      const firstRow = tableColoum[0];
       return Object.keys(firstRow).map((key) => ({
         id: JSON.stringify(key),
         accessorKey: key,
         header: truncateText(firstRow[key]),
         cell: ({ row }) => {
           const cellData = row.original[key];
-          return truncateText(cellData); 
-        },
+          return truncateText(cellData);
+        }
       }));
     }
 
-    return Object.keys(data[0]).map((key) => ({
+    return Object.keys(tableColoum[0]).map((key) => ({
       id: JSON.stringify(key),
       accessorKey: key,
       header: truncateText(key),
       cell: ({ row }) => {
         const cellData = row.original[key];
-        return truncateText(cellData); 
-      },
+        return truncateText(cellData);
+      }
     }));
-  }, [data, isUploadTable]);
+  }, [tableColoum, isUploadTable]);
 
   const table = useReactTable({
-    data: dataToRender, 
+    data: dataToRender,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: getCoreRowModel()
   });
 
-
-  return (
-
-    data.length !== 0 ?(
-      <div className="table-container">
-       
-       
+  return tableColoum.length !== 0 ? (
+    <div className={`table-container ${isEmployeeTable ? "addemployee" : ""} `}>
+      <div className="action-header">
+        <div className="sort-action">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchInput}
+            className="search-box"
+          />
+          <div className="date-picker">
+            <DatePicker
+              selected={startDate}
+              onChange={(update) => {
+                setDateRange(update);
+              }}
+              startDate={startDate}
+              endDate={endDate}
+              showMonthDropdown={true}
+              showYearDropdown={true}
+              selectsRange={true}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select a date range"
+              isClearable
+            />
+          </div>
+        </div>
+        <div className="user-action">
+          {showDownload && (
+            <span className="download" onClick={onDownload}>
+              download
+            </span>
+          )}
+          <button className="automate-btn" onClick={onAutomateClick}>
+        
+            Automate
+          </button>
+        </div>
+      </div>
+      <div className="table-wrapper">
         <table className="data-table">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                   </th>
                 ))}
               </tr>
@@ -80,10 +131,9 @@ const Table = ({ data = [],dataToRender=[], name = "", isUploadTable = false }) 
           </tbody>
         </table>
       </div>
-    )
-      : <div>
-        No data 
-      </div>
+    </div>
+  ) : (
+    <div>No data</div>
   );
 };
 

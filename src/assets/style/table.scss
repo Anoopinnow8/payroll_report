@@ -1,41 +1,133 @@
 .table-container {
-  overflow-y: scroll;
-  height: 67vh;
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+  height: calc(100vh - 175px);
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(252, 252, 252);
 
-  &::-webkit-scrollbar-track {
-    background: #ffffff;
+  &.addemployee {
+    height: calc(100vh - 240px);
   }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgb(167, 166, 166);
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgb(63, 62, 62);
-  }
-
-  table {
-    thead {
+  .action-header {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 4px;
+    background-color: rgb(252, 252, 252);
+    .sort-action {
       display: flex;
-      width: 100%;
-      position: sticky;
-      top: 0;
-    z-index: 9;
-    background-color: #fff;
-      tr {
+      align-items: center;
+      gap: 10px;
+      .search-box {
+        padding: 8px;
+        color: #2b2b2b;
+        width: 260px;
+        border-radius: 5px;
+        border: 2px solid rgb(126 126 131);
+        font-size: 0.9rem;
+        height: 35px;
+      }
+      .calendar {
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+      }
+      .date-picker {
+        .react-datepicker-popper {
+          z-index: 999;
+        }
+      }
+    }
+    .user-action {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .download {
+        color: blue;
+        font-size: 14px;
+        cursor: pointer;
+        border-bottom: 1px solid blue;
+        margin-right: 6px;
+      }
+      .automate-btn {
+        width: 120px;
+        cursor: pointer;
+        height: 35px;
+        color: #fff;
+        background-color: #1976d2;
+        border: none;
+        border-radius: 6px;
+        font-size: 18px;
+      }
+    }
+  }
+
+  .table-wrapper {
+    overflow-y: scroll;
+    height: calc(100% - 60px);
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #ffffff;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgb(167, 166, 166);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgb(63, 62, 62);
+    }
+    table {
+      thead {
         display: flex;
-        align-items: center;
-        height: 50px;
-        border: 1.5px solid #e0e0e0;
-        th {
+        width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #fff;
+        tr {
+          display: flex;
+          align-items: center;
+          height: 50px;
+          border: 1.5px solid #e0e0e0;
+          th {
+            width: 200px;
+            padding: 6px;
+            border: 1px solid #f8f8f8;
+            font: 600 14px/24px "Montserrat", sans-serif;
+            color: #333333;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            text-align: left;
+          }
+        }
+      }
+    }
+    tbody {
+      display: grid;
+      position: relative;
+      width: 100%;
+
+      tr {
+        &:nth-child(odd) {
+          background-color: #f2f2f2;
+        }
+
+        &:nth-child(even) {
+          background-color: #fff;
+        }
+
+        td {
           width: 200px;
           padding: 6px;
           border: 1px solid #f8f8f8;
-          font: 600 14px/24px "Montserrat", sans-serif;
+          font: 500 13px/24px "Montserrat", sans-serif;
           color: #333333;
           border: 1px solid #e0e0e0;
           border-radius: 2px;
@@ -44,40 +136,4 @@
       }
     }
   }
-  tbody {
-    display: grid;
-    position: relative;
-    width: 100%;
-
-    tr {
-      &:nth-child(odd) {
-        background-color: #f2f2f2;
-      }
-
-      &:nth-child(even) {
-        background-color: #fff;
-      }
-
-      td {
-        width: 200px;
-        padding: 6px;
-        border: 1px solid #f8f8f8;
-        font: 500 13px/24px "Montserrat", sans-serif;
-        color: #333333;
-        border: 1px solid #e0e0e0;
-        border-radius: 2px;
-        text-align: left;
-      }
-    }
-  }
 }
-
-
-  
-  .download{
-    cursor: pointer;
-    position: absolute;
-    z-index: 999;
-    right: 43px;
-    top: 136px;
-  }

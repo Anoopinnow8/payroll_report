@@ -1,7 +1,9 @@
 import './App.css';
 import { Slide, ToastContainer } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import RouteContainer from './routes/RouteContainer';
+import "react-datepicker/dist/react-datepicker.css";
 
 function App() {
   return (

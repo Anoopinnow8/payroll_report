@@ -6,6 +6,10 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Table from "../component/Table";
 import download from "../assets/image/download.png";
+import Employee from "./employee/Index";
+import { debounce, handleSearch } from "../utils/Common";
+import triggerApiRequest from "../api/AutomateApi";
+
 const DataFile = ({
   uploadTabledata = [],
   convertedTableData = [],
@@ -14,43 +18,61 @@ const DataFile = ({
   isFileConvert
 }) => {
   const [value, setValue] = useState("1");
+  const [uploadsearchQuery, setUploadSearchQuery] = useState('');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+const debouncedSearch = debounce((query) => {
+}, 2000);
+const handleSearchInputChange = (e) => {
+  const query = e.target.value;
+  setUploadSearchQuery(query); 
+  debouncedSearch(query); 
+};
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
     );
   });
-
   const filterDataArray = (filteredData) => {
-    let result = []
+    let result = [];
     for (let i = 0; i < filteredData.length; i++) {
       const arrEle = filteredData[i];
-      let arr = []
+      let arr = [];
       for (let j = 0; j < arrEle.length; j++) {
         const e = arrEle[j];
         if (j === 1 && e == null) {
-          arr.push(arrEle[0])
-          continue
+          arr.push(arrEle[0]);
+          continue;
         }
-        arr.push(e)
+        arr.push(e);
       }
-      result.push(arr)
+      result.push(arr);
     }
 
-    return result
+    return result;
   };
-  const newArray = filterDataArray(filteredData);
+  const uploadArray = filterDataArray(filteredData);
 
   const convertedfilteredData = convertedTableData.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
     );
   });
-  console.log(uploadTabledata, "uploadTabledata");
+
+  const handleAutomate = async () => {
+    let id = localStorage.getItem("ID");
+    let date = {
+      "startDate": "6/03/2024",
+      "endDate": "8/22/2024"
+    };
+    try {
+     const result=await triggerApiRequest(id,date)
+    } catch (error){
+      console.log(error,"Automate Error")
+   }
+}
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
@@ -77,27 +99,39 @@ const DataFile = ({
                 textOverflow: "ellipsis"
               }}
             />
+            <Tab
+              label="Employee"
+              value="3"
+              sx={{
+                maxWidth: "50%",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis"
+              }}
+            />
           </TabList>
         </Box>
         <TabPanel value="1">
           <Table
-            data={filteredData}
+            tableColoum={filteredData}
             isUploadTable={true}
-            dataToRender={newArray.slice(1)}
+            dataToRender={uploadArray.slice(1)}
+            searchQuery={uploadsearchQuery}
+            handleSearchInput={handleSearchInputChange}
           />
         </TabPanel>
         <TabPanel value="2">
-          {isFileConvert && (
-            <img
-              src={download}
-              alt="download"
-              className="download"
-              onClick={onDownload}
-            />
-          )}
-
           <Table
-            data={convertedfilteredData}
+            tableColoum={convertedfilteredData}
+            dataToRender={convertedfilteredData}
+            onDownload={onDownload}
+            showDownload={isFileConvert}
+            onAutomateClick={handleAutomate}
+          />
+        </TabPanel>
+        <TabPanel value="3">
+          <Employee
+            tableColoum={convertedfilteredData}
             dataToRender={convertedfilteredData}
           />
         </TabPanel>
