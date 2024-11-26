@@ -77,6 +77,7 @@ const Employee = ({ tableColoum, dataToRender }) => {
             dataToRender={employeeList}
             tableColoum={employeeList}
             isEmployeeTable={true}
+            rowsPerPage={10}
           />
         </div>
       )}

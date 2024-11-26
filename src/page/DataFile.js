@@ -141,6 +141,7 @@ const DataFile = ({
             dataToRender={uploadArray.slice(1)}
             searchQuery={uploadsearchQuery}
             handleSearchInput={handleSearchInputChange}
+            rowsPerPage={10} 
           />
         </TabPanel>
         <TabPanel value="2">
