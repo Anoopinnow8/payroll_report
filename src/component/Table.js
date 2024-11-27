@@ -64,12 +64,7 @@ const Table = ({
     <div className={`table-container ${isEmployeeTable ? "addemployee" : ""} `}>
       <div className="action-header">
         <div className="sort-action">
-          {showDownload && (
-            <div className="converted-info">
-              <span className="heading">Last Converted : </span>
-              <span className="info"> {lastFileConverted}</span>
-            </div>
-          )}
+        
           <input
             type="text"
             placeholder="Search..."
@@ -79,10 +74,17 @@ const Table = ({
           />
         </div>
         <div className="user-action">
+       
           {showDownload && (
             <span className="download" onClick={onDownload}>
               download
             </span>
+          )}
+           {showDownload && (
+            <div className="converted-info">
+              <span className="heading">Last Converted  </span>
+              <span className="info"> {lastFileConverted}</span>
+            </div>
           )}
         </div>
       </div>
