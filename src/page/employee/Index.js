@@ -44,7 +44,6 @@ const Employee = ({ tableColoum, dataToRender }) => {
       if (res.status === 200) {
         setemployeeList(res.data);
       }
-      console.log(res, "resss");
     } catch (error) {
       console.log("error", error);
     } finally {

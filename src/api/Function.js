@@ -10,10 +10,10 @@ const getEmployee = async (data) => {
   return await makeApiCall("get", url, data,true);
 };
 const getIntiate = async (data) => {
-  const url = `${REACT_APP_BASE_URL}/convert/initiate/`;
+  const url = `${REACT_APP_BASE_URL}convert/initiate/`;
   return await makeApiCall("get", url, data,true);
 };
-const convertedFileByID = async (id) => {
+const AutomateConvertedFileByID = async (id) => {
   const url = `${REACT_APP_BASE_URL}convert/${id}/`;
   return await makeApiCall("get", url,true);
 };
@@ -22,5 +22,5 @@ const getlatest = async (data) => {
   return await makeApiCall("get", url, data,true);
 };
 export {
-  createEmployee,getEmployee,getIntiate,convertedFileByID,getlatest
+  createEmployee,getEmployee,getIntiate,AutomateConvertedFileByID,getlatest
 }

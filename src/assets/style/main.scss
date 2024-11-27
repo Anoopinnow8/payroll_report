@@ -12,59 +12,6 @@
   flex-direction: column;
   height: 100vh;
   gap: 20px;
-  // .header {
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: space-between;
-  //   gap: 20px;
-  //   width: 100%;
-  //   padding:10px 14px;
-  //   border-radius: 10px;
-  //   margin-bottom: 20px;
-  //   .file-button-box{
-  //     display: flex;
-  //     align-items: center;
-  //     gap: 20px;
-  //   .upload-box {
-  //     display: flex;
-  //     flex-direction: column;
-  //     gap: 10px;
-  //     .upload-data {
-  //       padding: 10px;
-  //       border-radius: 10px;
-  //       background-color: rgb(232, 232, 235);
-  //       border: 2px solid rgb(202, 202, 202);
-  //       position: relative;
-  //       .file-name {
-  //         font-size: 16px;
-  //         align-items: center;
-  //         display: flex;
-  //         gap: 4px;
-  //         .fileicon {
-  //           width: 24px;
-  //           height: 24px;
-  //         }
-  //       }
-  //       .preview {
-  //         position: absolute;
-  //         right: -26px;
-  //         top: -10px;
-  //         height: 20px;
-  //         width: 20px;
-  //         cursor: pointer;
-  //       }
-  //       .deleteicon {
-  //         position: absolute;
-  //         right: -26px;
-  //         top: 11px;
-  //         height: 20px;
-  //         width: 20px;
-  //         cursor: pointer;
-  //       }
-  //     }
-  //   }
-  // }
-  // }
 }
 .cross-icon {
   width: 20px;
@@ -102,7 +49,7 @@
 
 
   .spinner {
-    border: 6px solid rgb(90, 90, 252);
+    border: 6px solid #FF8678;
     border-top: 6px solid #ffffff;
     border-radius: 50%;
     width: 50px;
@@ -115,4 +62,21 @@
       transform: rotate(360deg);
     }
   }
+}
+
+.MuiBox-root{
+  padding:0 10px;
+.MuiTabs-root{
+  background-color: #FFF5EF;
+  border:1px solid #FFC5A078;
+  border-radius: 8px 8px 0 0;
+
+  .MuiButtonBase-root{
+    // color: #000000BF;
+    // font: 700 16px/19.3px "Inter", sans-serif;
+    .Mui-selected {
+     
+  }
+  }
+}
 }

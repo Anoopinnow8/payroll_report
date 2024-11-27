@@ -8,21 +8,39 @@ import { handleFileConvert } from "../api/FileApi";
 import { useNavigate } from "react-router";
 import { saveAs } from "file-saver";
 import Navbar from "../component/Navbar";
-import { convertedFileByID, getIntiate } from "../api/Function";
+import { AutomateConvertedFileByID, getIntiate } from "../api/Function";
+import { convertCsvToJson } from "../utils/ConvertJson";
 import triggerApiRequest from "../api/AutomateApi";
 const Home = () => {
   const navigate = useNavigate();
-
+  const [curTab, setCurTab] = useState("1");
   const [uploadFile, setUploadFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
+  const [autoMatedFileUrl, setAutoMatedFileUrl] = useState("");
+
   const [lastConverted, setLastConverted] = useState("");
+  const [lastAutoConverted, setLastAutoConverted] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
-
+  const [isAutomatate, setIsAutomate] = useState(false);
+  const [isAutomatedApiCalled, setIsAutomatedApiCalled] = useState(false);
+  const [showCalendar, setshowCalandar] = useState(false);
+  const [automatedDateRange, setAutomateDateRange] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection"
+    }
+  ]);
   const fileInputRef = useRef(null);
-
+  const handleTabChange = (newValue) => {
+    setCurTab(newValue);
+  };
+  const handleShowCalandar = () => {
+    setshowCalandar((prev) => !prev);
+  };
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -84,7 +102,9 @@ const Home = () => {
   };
   const handleLastConverted = (data) => {
     if (data) {
-      return data.split(" ")[1].slice(0, 5);
+
+
+      return lastAutoConverted?data.split("T")[1]?.slice(0, 5):data.split(" ")[1]?.slice(0, 5);
     } else {
       return " ";
     }
@@ -102,47 +122,111 @@ const Home = () => {
     try {
       const res = await getIntiate();
       if (res?.status === 200) {
-        localStorage.setItem("ID", res?.data?.id);
+        const id = res?.data?.id;
+        localStorage.setItem("ID", id);
+        return id;
+      } else {
+        console.error("getIntiate did not return a valid response.");
+        return null;
       }
     } catch (error) {
-      console.log("error", error);
+      console.error("Error in getID:", error);
+      return null;
     }
   };
+  const formatDate = (date) => {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
   const handleAutomate = async () => {
-    let id = localStorage.getItem("ID");
-    let data = {
-      id: id,
-      startDate: "6/03/2024",
-      endDate: "8/22/2024"
-    };
+    setshowCalandar(false);
+
     try {
+      const id = await getID();
+      if (!id) {
+        toast.error("Failed to generate ID. ");
+        return;
+      }
+      const data = {
+        id: id || localStorage.getItem("ID"),
+        startDate: formatDate(automatedDateRange[0]?.startDate),
+        endDate: formatDate(automatedDateRange[0]?.endDate)
+      };
+
       const result = await triggerApiRequest(data);
+
+      if (result.status === 202) {
+        console.log("Automation API ");
+        setIsAutomatedApiCalled(true);
+        startFetchInterval();
+        setIsAutomate(true);
+      }
     } catch (error) {
       console.log(error, "Automate Error");
     }
   };
 
-  useEffect(() => {
-    getID();
-  }, []);
-  useEffect(() => {
-    if (convertedFileUrl) {
-      fetch(convertedFileUrl)
-        .then((response) => response.text())
-        .then((csvData) => {
-          Papa.parse(csvData, {
-            header: true,
-            complete: (result) => {
-              setConvertJsonData(result.data);
-            },
-            error: (error) => {
-              console.error("Error parsing converted file:", error);
-            }
-          });
-        })
-        .catch((error) => console.log("Error fetching converted file:", error));
+  const handleFetchAutomatedFile = async () => {
+    const id = localStorage.getItem("ID");
+
+    try {
+      const result = await AutomateConvertedFileByID(id);
+      if (result.status === 200) {
+        if (result.data.status === "Converted") {
+          setAutoMatedFileUrl(result?.data?.output_url);
+          setLastAutoConverted(result?.data?.updated_at);
+          setIsAutomate(false);
+          setCurTab("2");
+          toast.success("Automation is complete");
+          return true;
+        }
+        if (result.data.status === "Failed") {
+        
+        
+          setIsAutomate(false);
+      
+          toast.error("Something went wrong");
+          return false;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching automated file:", error);
+      return false;
     }
-  }, [convertedFileUrl]);
+  };
+
+  const startFetchInterval = async () => {
+    console.log("Timer Call");
+    let isFetched;
+    isFetched = await handleFetchAutomatedFile();
+
+    const id = setInterval(async () => {
+      let isFetched = await handleFetchAutomatedFile();
+      isFetched && clearInterval(id);
+    }, 30000);
+
+    if (isFetched) {
+      clearInterval(id);
+    }
+  };
+
+  const handleCsvTojsonConvert = async (url) => {
+    try {
+      const res = await convertCsvToJson(url);
+      setConvertJsonData(res);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (autoMatedFileUrl) {
+      handleCsvTojsonConvert(autoMatedFileUrl);
+    } else if (convertedFileUrl) {
+      handleCsvTojsonConvert(convertedFileUrl);
+    }
+  }, [autoMatedFileUrl, convertedFileUrl]);
+  console.log(lastAutoConverted, "lastAutoConverted");
   return (
     <div className="main-container">
       <Navbar
@@ -154,15 +238,26 @@ const Home = () => {
         convertDisable={uploadFile ? false : true}
         onLogout={handleLogout}
         onAutomate={handleAutomate}
+        isAutomatate={isAutomatate}
+        onDateSelect={setAutomateDateRange}
+        onShowCalandar={handleShowCalandar}
+        dateRange={automatedDateRange}
+        showCalendar={showCalendar}
+        startDate={formatDate(automatedDateRange[0].startDate)}
+        endDate={formatDate(automatedDateRange[0].endDate)}
       />
 
       <DataFile
+        currentTab={curTab}
+        onTabSwitch={handleTabChange}
         uploadTabledata={jsonData}
         convertedTableData={convertjsonData}
         filename={uploadFile?.name}
         onDownload={handleConvertFileDownload}
         isFileConvert={convertedFileUrl}
-        lastFileConverted={handleLastConverted(lastConverted)}
+        lastFileConverted={handleLastConverted(
+          lastAutoConverted?lastAutoConverted:lastConverted
+        )}
       />
       {isLoading && <Loader />}
     </div>

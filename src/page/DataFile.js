@@ -8,7 +8,7 @@ import Table from "../component/Table";
 import download from "../assets/image/download.png";
 import Employee from "./employee/Index";
 import { debounce, handleSearch } from "../utils/Common";
-import { convertedFileByID,getlatest } from "../api/Function";
+import { convertedFileByID, getlatest } from "../api/Function";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
 const DataFile = ({
@@ -17,15 +17,14 @@ const DataFile = ({
   filename = "",
   onDownload = () => {},
   isFileConvert,
-  lastFileConverted
+  lastFileConverted,currentTab,onTabSwitch=()=>{}
 }) => {
-  const [value, setValue] = useState("1");
   const [uploadsearchQuery, setUploadSearchQuery] = useState("");
   const [previousConvertedData, setPrevConvertedData] = useState([]);
   const [previousConvertedUrl, setPrevConvertedUrl] = useState("");
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    onTabSwitch(newValue);
   };
   const debouncedSearch = debounce((query) => {}, 2000);
   const handleSearchInputChange = (e) => {
@@ -65,12 +64,10 @@ const DataFile = ({
   });
 
   const getLatestConvertedFile = async () => {
-  
     try {
       const res = await getlatest();
       if (res.status === 200) {
-        console.log(res.data.output_url,"jjjj")
-        setPrevConvertedUrl((res.data.output_url));
+        setPrevConvertedUrl(res.data.output_url);
       }
     } catch (error) {
       console.log(error);
@@ -99,7 +96,7 @@ const DataFile = ({
   }, []);
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={value}>
+      <TabContext value={currentTab}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="">
             <Tab

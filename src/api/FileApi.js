@@ -27,7 +27,6 @@ export const handleFileConvert = async (
   try {
     const response = await fetch(url, requestOptions);
     const result = await response.json();
-    console.log(result, "result");
     if (result.file_url) {
       setConvertedFileUrl(result.file_url);
       setLastConverted(result.updated_at);

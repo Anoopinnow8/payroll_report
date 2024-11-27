@@ -10,8 +10,8 @@ const triggerApiRequest = async ( payload) => {
         'Content-Type': 'application/json',
       }
     });
-    console.log('API Response:', response.data);
-    return response.data;
+   
+    return response;
   } catch (error) {
     console.error('Error occurred while calling the API:', error);
     throw error; 

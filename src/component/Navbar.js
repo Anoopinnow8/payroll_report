@@ -3,50 +3,79 @@ import Logo from "../assets/image/payrolllogo.png";
 import User from "../assets/image/user.png";
 import Upload from "../assets/image/upload.png";
 import Convert from "../assets/image/convert.png";
-import DatePicker from "react-datepicker";
-
+import DropDown from "../assets/image/dropdown.png";
+import { DateRangePicker } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import { Automate, DownArrow } from "../assets/image";
 const Navbar = ({
   onUploadClick = () => {},
   handleFileUpload = () => {},
   fileInputRef,
+  isAutomatate,
   onConvertClick = () => {},
   uploadDisable,
   convertDisable,
   onLogout = () => {},
-  onAutomate = () => {}
+  onAutomate = () => {},
+  onDateSelect = () => {},
+  onShowCalandar = () => {},
+  showCalendar,
+  dateRange,
+  startDate,
+  endDate
 }) => {
   const [showModal, setshowModal] = useState(false);
-  const [dateRange, setDateRange] = useState([null, null]);
-  const [startDate, endDate] = dateRange;
+
   const handleShowUserBox = () => {
     setshowModal(!showModal);
   };
+
+  const handleDateChange = (ranges) => {
+    onDateSelect([ranges.selection]);
+  };
+
   return (
     <div className="navbar-container">
       <div className="navbar-wrapper">
         <img src={Logo} alt="logo" lazy="loading" className="logo" />
+        <div className="automate-box">
+          <div className="date-box">
+            <span className="date">
+              {startDate} - {endDate}
+            </span>
+            <img
+              src={DropDown}
+              alt="drop_icon"
+              className="drop-icon"
+              onClick={onShowCalandar}
+            />
+            <div className="calandar-wrapper">
+              {showCalendar && (
+                <DateRangePicker
+                  ranges={dateRange}
+                  onChange={handleDateChange}
+                  showSelectionPreview={true}
+                  moveRangeOnFirstSelection={false}
+                  editableDateInputs={true}
+                  months={1}
+                  direction="horizontal"
+                  className="date-range-picker"
+                />
+              )}
+            </div>
+          </div>
+          <button
+            className="automate-btn"
+            disabled={false}
+            onClick={onAutomate}
+          >
+            <img src={Automate} alt="upload" className="icon" lazy="loading" />
+            {isAutomatate ? "Automating..." : "Automate"}
+          </button>
+        </div>
         <div className="user-profile">
           <div className="action">
-            <div className="date-picker">
-              <DatePicker
-                selected={startDate}
-                onChange={(update) => {
-                  setDateRange(update);
-                }}
-                startDate={startDate}
-                endDate={endDate}
-                showMonthDropdown={true}
-                showYearDropdown={true}
-                selectsRange={true}
-                dateFormat="yyyy-MM-dd"
-                placeholderText="Select a date range"
-                isClearable
-              />
-            </div>
-            <button className="button" disabled={false} onClick={onAutomate}>
-              <img src={Convert} alt="upload" className="icon" lazy="loading" />
-              Automate
-            </button>
             <button
               className="button"
               disabled={uploadDisable}
@@ -72,11 +101,20 @@ const Navbar = ({
               Convert File
             </button>
           </div>
+        </div>
+      </div>
+      <div className="user-info-wrapper">
+        <div className="rod"> </div>
+        <div className="user-box">
+          <span className="text">
+         
+            welecome, <span className="name">username </span>
+          </span>
           <img
-            src={User}
-            alt="user"
+            src={DownArrow}
+            alt="down"
             lazy="loading"
-            className="user"
+            className="aroow"
             onClick={handleShowUserBox}
           />
         </div>

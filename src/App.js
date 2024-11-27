@@ -3,8 +3,8 @@ import { Slide, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
 import RouteContainer from './routes/RouteContainer';
-import "react-datepicker/dist/react-datepicker.css";
-
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 function App() {
   return (
     <div className="App">
