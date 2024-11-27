@@ -1,28 +1,6 @@
 .employee-wrapper {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  .button-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    width: 100%;
-    .addemployee {
-      width: 120px;
-      display: flex;
-      align-items: center;
-     justify-content: center;
-      background-color: #ff8678;
-      color: #fff;
-      height: 36px;
-      border: 2px solid #ffede1;
-      border-radius: 8px;
-      font: 700 16px/19.3px "Inter", sans-serif;
-      cursor: pointer;
-      border: none;
-    }
-  }
+ 
+
   .skeleton {
     width: 100%;
     flex-direction: column;
@@ -94,10 +72,10 @@
         cursor: pointer;
         height: 40px;
         color: #fff;
-        background-color: #1976d2;
+        background-color: #ff8678;
         border: none;
-        border-radius: 6px;
-        font-size: 18px;
+        border-radius: 8px;
+        font: 700 16px/19.3px "Inter", sans-serif;
         margin-top: 10px;
       }
     }

@@ -2,18 +2,17 @@ import React, { useEffect, useState } from "react";
 import Table from "../../component/Table";
 import AddEmployee from "./AddEmployee";
 import Skeleton from "react-loading-skeleton";
-import { employeeColumns } from "../../utils/TableHeader";
+import { handleSearch } from "../../utils/Common";
+
 import { createEmployee, getEmployee } from "../../api/Function";
 import { toast } from "react-toastify";
 import Loader from "../../component/Loader";
-const Employee = ({ tableColoum, dataToRender }) => {
-  const [addEmployee, setaddEmployee] = useState(false);
+const Employee = ({  showModal,onCloseModal=()=>{}}) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isFetchingEmp, setIsFetchingEmp] = useState(false);
   const [employeeList, setemployeeList] = useState([]);
-  const handleEmployeeModal = () => {
-    setaddEmployee(!addEmployee);
-  };
+  const [searchQuery, setSearchQuery] = useState("");
+
   const HandleAddEmployee = async (data) => {
     setIsCreating(true);
     try {
@@ -33,7 +32,7 @@ const Employee = ({ tableColoum, dataToRender }) => {
       toast.error("oops! something went wrong");
     } finally {
       setIsCreating(false);
-      handleEmployeeModal();
+      onCloseModal();
       handleGetEmployees();
     }
   };
@@ -42,7 +41,20 @@ const Employee = ({ tableColoum, dataToRender }) => {
     try {
       const res = await getEmployee();
       if (res.status === 200) {
-        setemployeeList(res.data);
+        const reorderedEmployees = res.data.map(employee => {
+          return {
+            name: employee.name,
+            emp_id:employee.id,
+            department:employee.department,
+            bil_rate:employee.bil_rate,
+            pay_rate: employee.pay_rate,
+            id: employee.id,
+            ...employee
+          };
+        });
+  
+      
+        setemployeeList(reorderedEmployees);
       }
     } catch (error) {
       console.log("error", error);
@@ -50,20 +62,20 @@ const Employee = ({ tableColoum, dataToRender }) => {
       setIsFetchingEmp(false);
     }
   };
-
+  
+  const handleSearchInputChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+  
+  };
   useEffect(() => {
     handleGetEmployees();
   }, []);
-  console.log(isFetchingEmp, "isFetchingEmp");
-
+  
+  const SearchData = handleSearch(employeeList, handleSearchInputChange)
   return (
-    <div className="employee-wrapper">
-      <div className="button-wrapper">
-        <button className="addemployee" onClick={handleEmployeeModal}>
-          Add
-        </button>
-      </div>
-
+    <div className="employee-wrapper0">
+     
       {isFetchingEmp ? (
        <div className="skeleton">
          
@@ -73,16 +85,18 @@ const Employee = ({ tableColoum, dataToRender }) => {
       ) : (
         <div className="emp-table-wrapper">
           <Table
-            dataToRender={employeeList}
+            dataToRender={SearchData}
             tableColoum={employeeList}
-            isEmployeeTable={true}
+              isEmployeeTable={true}
+              searchQuery={searchQuery}
+              handleSearchInput={handleSearchInputChange}
           />
         </div>
       )}
 
       <AddEmployee
-        show={addEmployee}
-        onClose={handleEmployeeModal}
+        show={showModal}
+        onClose={onCloseModal}
         onSubmit={HandleAddEmployee}
         isLoading={isCreating}
       />

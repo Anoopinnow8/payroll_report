@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
+import React, { useState } from "react";
 import Table from "../component/Table";
-import download from "../assets/image/download.png";
 import Employee from "./employee/Index";
-import { debounce } from "../utils/Common";
-import { convertedFileByID, getlatest } from "../api/Function";
-import Papa from "papaparse";
+import { handleSearch } from "../utils/Common";
 import { DownLoad } from "../assets/image";
 
 const DataFile = ({
@@ -16,26 +12,30 @@ const DataFile = ({
   isFileConvert,
   lastFileConverted,
   currentTab,
-  onTabSwitch = () => {},
+  onTabSwitch = () => {}
 }) => {
-  const [uploadsearchQuery, setUploadSearchQuery] = useState("");
-  const [previousConvertedData, setPrevConvertedData] = useState([]);
-  const [previousConvertedUrl, setPrevConvertedUrl] = useState("");
-
   const [activeTab, setActiveTab] = useState(currentTab || "1");
+  const [uploadsearchQuery, setUploadSearchQuery] = useState("");
+  const [convertsearchQuery, setConvertSearchQuery] = useState("");
+  const [addEmployee, setaddEmployee] = useState(false);
 
   const handleTabChange = (newTab) => {
     setActiveTab(newTab);
-    onTabSwitch(newTab); // Callback for parent
+    onTabSwitch(newTab);
   };
-
-  const debouncedSearch = debounce((query) => {}, 2000);
+  const handleEmployeeModal = () => {
+    setaddEmployee(!addEmployee);
+  };
   const handleSearchInputChange = (e) => {
     const query = e.target.value;
     setUploadSearchQuery(query);
-    debouncedSearch(query);
+  
   };
-
+  const handleConvertSearch = (e) => {
+    const query = e.target.value;
+    setConvertSearchQuery(query);
+  
+  };
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
@@ -67,72 +67,51 @@ const DataFile = ({
       (value) => value !== null && value !== undefined && value !== ""
     );
   });
+  const uploadSearchData = handleSearch(uploadArray.slice(1), uploadsearchQuery)
+  const convertSearchData=handleSearch(convertedfilteredData,convertsearchQuery)
 
-  const getLatestConvertedFile = async () => {
-    try {
-      const res = await getlatest();
-      if (res.status === 200) {
-        setPrevConvertedUrl(res.data.output_url);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (previousConvertedData) {
-      fetch(previousConvertedUrl)
-        .then((response) => response.text())
-        .then((csvData) => {
-          Papa.parse(csvData, {
-            header: true,
-            complete: (result) => {
-              setPrevConvertedData(result.data);
-            },
-            error: (error) => {
-              console.error("Error parsing converted file:", error);
-            },
-          });
-        })
-        .catch((error) => console.log("Error fetching converted file:", error));
-    }
-  }, [previousConvertedUrl]);
-
-  useEffect(() => {
-    getLatestConvertedFile();
-  }, []);
 
   return (
     <div className="home-container">
-      <div className="home-action-wrapper" >
-        <div className="action-tabs"> 
-        <div
-          onClick={() => handleTabChange("1")}
-          className={`tab ${activeTab === "1" ?"active":""}`}
-        >
-          Labor Payroll Report
+      <div className="home-action-wrapper">
+        <div className="action-tabs">
+          <div
+            onClick={() => handleTabChange("1")}
+            className={`tab ${activeTab === "1" ? "active" : ""}`}
+          >
+            Labor Payroll Report
+          </div>
+          <div
+            onClick={() => handleTabChange("2")}
+            className={`tab ${activeTab === "2" ? "active" : ""}`}
+          >
+            Converted Labor Payroll Report
+          </div>
+          <div
+            onClick={() => handleTabChange("3")}
+            className={`tab ${activeTab === "3" ? "active" : ""}`}
+          >
+            Employee
+          </div>
         </div>
-        <div
-          onClick={() => handleTabChange("2")}
-          className={`tab ${activeTab === "2" ?"active":""}`}
-        >
-          Converted Labor Payroll Report
-        </div>
-        <div
-          onClick={() => handleTabChange("3")}
-          className={`tab ${activeTab === "3" ?"active":""}`}
-        >
-          Employee
-        </div>
-        </div>
-   { isFileConvert &&   <button className="download" onClick={onDownload}><img src={DownLoad} alt="download"/> Download </button>}
+        {activeTab === "2" && isFileConvert && (
+          <button className="download" onClick={onDownload}>
+            <img src={DownLoad} alt="download" /> Download
+          </button>
+        )}
+        {activeTab === "3" && (
+          <button className="download" onClick={handleEmployeeModal}>
+          
+            Add Employee
+          </button>
+        )}
       </div>
-      <div className="data-container" >
+      <div className="data-container">
         {activeTab === "1" && (
           <Table
             tableColoum={filteredData}
             isUploadTable={true}
-            dataToRender={uploadArray.slice(1)}
+            dataToRender={uploadSearchData}
             searchQuery={uploadsearchQuery}
             handleSearchInput={handleSearchInputChange}
           />
@@ -140,16 +119,18 @@ const DataFile = ({
         {activeTab === "2" && (
           <Table
             tableColoum={convertedfilteredData}
-            dataToRender={convertedfilteredData}
+            dataToRender={convertSearchData}
             onDownload={onDownload}
             showDownload={isFileConvert}
             lastFileConverted={lastFileConverted}
+            searchQuery={convertsearchQuery}
+            handleSearchInput={handleConvertSearch}
           />
         )}
         {activeTab === "3" && (
           <Employee
-            tableColoum={convertedfilteredData}
-            dataToRender={convertedfilteredData}
+            showModal={addEmployee}
+            onCloseModal={handleEmployeeModal}
           />
         )}
       </div>

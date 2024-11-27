@@ -2,18 +2,14 @@
   height: calc(100vh - 188px);
   display: flex;
   flex-direction: column;
-  
 
-  &.addemployee {
-    height: calc(100vh - 234px);
-  }
   .action-header {
     height: 60px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0px 4px;
+    padding: 0px 16px;
   
     .sort-action {
       display: flex;
@@ -42,7 +38,7 @@
         display: flex;
         gap: 1px;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-end;
      
         .heading{
        color: #000000;
@@ -78,7 +74,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #ffede1;
+      background: #ffc5a0;
     }
 
     &::-webkit-scrollbar-thumb:hover {
@@ -142,5 +138,12 @@
         }
       }
     }
+  }
+  .no-data{
+    width: 100%;
+    padding-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

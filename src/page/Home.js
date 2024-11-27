@@ -8,7 +8,7 @@ import { handleFileConvert } from "../api/FileApi";
 import { useNavigate } from "react-router";
 import { saveAs } from "file-saver";
 import Navbar from "../component/Navbar";
-import { AutomateConvertedFileByID, getIntiate } from "../api/Function";
+import { AutomateConvertedFileByID, getIntiate ,getlatest} from "../api/Function";
 import { convertCsvToJson } from "../utils/ConvertJson";
 import triggerApiRequest from "../api/AutomateApi";
 const Home = () => {
@@ -19,12 +19,16 @@ const Home = () => {
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [autoMatedFileUrl, setAutoMatedFileUrl] = useState("");
+  const [latestConvertedFileUrl, setLatestConvertedFileUrl] = useState("");
+
 
   const [lastConverted, setLastConverted] = useState("");
   const [lastAutoConverted, setLastAutoConverted] = useState("");
+  const [latestConvertedTime, setLatestConvertedTime] = useState("");
 
   const [isLoading, setisLoading] = useState(false);
   const [isAutomatate, setIsAutomate] = useState(false);
+  const[isAutomateDisable,setIsAutomateDisable]=useState(false)
   const [isAutomatedApiCalled, setIsAutomatedApiCalled] = useState(false);
   const [showCalendar, setshowCalandar] = useState(false);
   const [automatedDateRange, setAutomateDateRange] = useState([
@@ -100,11 +104,15 @@ const Home = () => {
       setLastConverted
     );
   };
-  const handleLastConverted = (data) => {
+  const handleLastConvertedTime = (data) => {
     if (data) {
-
-
-      return lastAutoConverted?data.split("T")[1]?.slice(0, 5):data.split(" ")[1]?.slice(0, 5);
+      const dateObj = new Date(data);
+      const day = dateObj.getDate().toString().padStart(2, '0'); 
+      const year = dateObj.getFullYear();
+      const formattedDate = `${day}-${(dateObj.getMonth() + 1).toString().padStart(2, '0')}-${year}`; 
+      const time = dateObj.toTimeString().slice(0, 5); 
+  
+      return `${time} , ${formattedDate}`;
     } else {
       return " ";
     }
@@ -142,7 +150,7 @@ const Home = () => {
   };
   const handleAutomate = async () => {
     setshowCalandar(false);
-
+    setIsAutomate(true);
     try {
       const id = await getID();
       if (!id) {
@@ -158,13 +166,14 @@ const Home = () => {
       const result = await triggerApiRequest(data);
 
       if (result.status === 202) {
-        console.log("Automation API ");
+     
         setIsAutomatedApiCalled(true);
         startFetchInterval();
         setIsAutomate(true);
       }
     } catch (error) {
       console.log(error, "Automate Error");
+      setIsAutomate(false);
     }
   };
 
@@ -176,7 +185,8 @@ const Home = () => {
       if (result.status === 200) {
         if (result.data.status === "Converted") {
           setAutoMatedFileUrl(result?.data?.output_url);
-          setLastAutoConverted(result?.data?.updated_at);
+          setLastAutoConverted(result?.data?.created_at);
+          setIsAutomateDisable(false);
           setIsAutomate(false);
           setCurTab("2");
           toast.success("Automation is complete");
@@ -198,20 +208,37 @@ const Home = () => {
   };
 
   const startFetchInterval = async () => {
-    console.log("Timer Call");
+   
     let isFetched;
     isFetched = await handleFetchAutomatedFile();
 
     const id = setInterval(async () => {
       let isFetched = await handleFetchAutomatedFile();
       isFetched && clearInterval(id);
-    }, 30000);
+    }, 20000);
 
     if (isFetched) {
       clearInterval(id);
     }
   };
-
+  const getLatestConvertedFile = async () => {
+    try {
+      const res = await getlatest();
+      if (res.status === 200) {
+        setLatestConvertedFileUrl(res?.data?.latest?.output_url);
+        setLatestConvertedTime(res?.data?.latest?.created_at)
+        if (res?.data?.pending !== null) {
+          setIsAutomate(true);
+          setIsAutomateDisable(true);
+          setLastAutoConverted(res?.data?.pending?.created_at)
+          localStorage.setItem("ID", res?.data?.pending?.id);
+          startFetchInterval();
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleCsvTojsonConvert = async (url) => {
     try {
       const res = await convertCsvToJson(url);
@@ -220,13 +247,18 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (autoMatedFileUrl) {
+    if (latestConvertedFileUrl) {
+      handleCsvTojsonConvert(latestConvertedFileUrl);
+    }
+   else if (autoMatedFileUrl) {
       handleCsvTojsonConvert(autoMatedFileUrl);
     } else if (convertedFileUrl) {
       handleCsvTojsonConvert(convertedFileUrl);
     }
-  }, [autoMatedFileUrl, convertedFileUrl]);
-  console.log(lastAutoConverted, "lastAutoConverted");
+  }, [latestConvertedFileUrl,autoMatedFileUrl, convertedFileUrl]);
+  useEffect(() => {
+    getLatestConvertedFile()
+  }, [autoMatedFileUrl, convertedFileUrl])
   return (
     <div className="main-container">
       <Navbar
@@ -239,6 +271,8 @@ const Home = () => {
         onLogout={handleLogout}
         onAutomate={handleAutomate}
         isAutomatate={isAutomatate}
+        automateDisable={isAutomateDisable || isAutomatate}
+        lastAutofetchTime={lastAutoConverted.split("T")[1]?.slice(0, 5)}
         onDateSelect={setAutomateDateRange}
         onShowCalandar={handleShowCalandar}
         dateRange={automatedDateRange}
@@ -255,8 +289,8 @@ const Home = () => {
         filename={uploadFile?.name}
         onDownload={handleConvertFileDownload}
         isFileConvert={convertedFileUrl}
-        lastFileConverted={handleLastConverted(
-          lastAutoConverted?lastAutoConverted:lastConverted
+        lastFileConverted={handleLastConvertedTime(
+          latestConvertedTime?latestConvertedTime: lastAutoConverted?lastAutoConverted:lastConverted
         )}
       />
       {isLoading && <Loader />}

@@ -29,7 +29,7 @@ export const handleFileConvert = async (
     const result = await response.json();
     if (result.file_url) {
       setConvertedFileUrl(result.file_url);
-      setLastConverted(result.updated_at);
+      setLastConverted(result.created_at);
       toast.success("File converted successfully");
     } else {
       toast.error("Conversion failed. No file URL returned.");

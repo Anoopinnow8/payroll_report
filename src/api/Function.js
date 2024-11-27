@@ -18,7 +18,7 @@ const AutomateConvertedFileByID = async (id) => {
   return await makeApiCall("get", url,true);
 };
 const getlatest = async (data) => {
-  const url = `${REACT_APP_BASE_URL}/convert/fetch-latest/`;
+  const url = `${REACT_APP_BASE_URL}convert/fetch-latest/`;
   return await makeApiCall("get", url, data,true);
 };
 export {

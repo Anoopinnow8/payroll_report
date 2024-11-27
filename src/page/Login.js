@@ -90,7 +90,7 @@ const Login = () => {
     <div className="signin-wrapper">
       <div className="signin-box">
         <div className="logo">
-          {/* <img src={logo} alt="logo" className="image" /> */}
+       
         </div>
         <div className="input-container">
           <span className="title">Hey friend! Welcome back</span>

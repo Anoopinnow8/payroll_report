@@ -61,7 +61,7 @@ const Table = ({
   });
 
   return tableColoum.length !== 0 ? (
-    <div className={`table-container ${isEmployeeTable ? "addemployee" : ""} `}>
+    <div className='table-container'>
       <div className="action-header">
         <div className="sort-action">
         
@@ -75,7 +75,7 @@ const Table = ({
         </div>
         <div className="user-action">
 
-           {showDownload && (
+           {lastFileConverted && (
             <div className="converted-info">
               <span className="heading">Last Converted  </span>
               <span className="info"> {lastFileConverted}</span>
@@ -114,7 +114,10 @@ const Table = ({
       </div>
     </div>
   ) : (
-    <div className={`table-container ${isEmployeeTable ? "addemployee" : ""} `}>No data</div>
+      <div className='table-container' >
+        <div className="no-data">    No data </div>
+     
+      </div>
   );
 };
 

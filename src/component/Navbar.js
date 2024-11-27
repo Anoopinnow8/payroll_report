@@ -12,7 +12,8 @@ const Navbar = ({
   onUploadClick = () => {},
   handleFileUpload = () => {},
   fileInputRef,
-  isAutomatate,
+  isAutomatate, automateDisable,
+  
   onConvertClick = () => {},
   uploadDisable,
   convertDisable,
@@ -23,7 +24,7 @@ const Navbar = ({
   showCalendar,
   dateRange,
   startDate,
-  endDate
+  endDate,lastAutofetchTime
 }) => {
   const [showModal, setshowModal] = useState(false);
 
@@ -34,7 +35,6 @@ const Navbar = ({
   const handleDateChange = (ranges) => {
     onDateSelect([ranges.selection]);
   };
-
   return (
     <div className="navbar-container">
       <div className="navbar-wrapper">
@@ -61,18 +61,20 @@ const Navbar = ({
                   months={1}
                   direction="horizontal"
                   className="date-range-picker"
+                  
                 />
               )}
             </div>
           </div>
           <button
             className="automate-btn"
-            disabled={false}
+            disabled={automateDisable}
             onClick={onAutomate}
           >
             <img src={Automate} alt="upload" className="icon" lazy="loading" />
             {isAutomatate ? "Automating..." : "Automate"}
           </button>
+        { automateDisable && <span className="last-fetched"> Last fetched <span className="time">{lastAutofetchTime} </span></span>}
         </div>
         <div className="user-profile">
           <div className="action">
@@ -107,7 +109,6 @@ const Navbar = ({
         <div className="rod"> </div>
         <div className="user-box">
           <span className="text">
-         
             welecome, <span className="name">username </span>
           </span>
           <img
@@ -129,7 +130,7 @@ const Navbar = ({
 
           <div className="footer">
             <span className="text" onClick={onLogout}>
-              {" "}
+            
               Logout
             </span>
           </div>
