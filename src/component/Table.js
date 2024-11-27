@@ -74,12 +74,7 @@ const Table = ({
           />
         </div>
         <div className="user-action">
-       
-          {showDownload && (
-            <span className="download" onClick={onDownload}>
-              download
-            </span>
-          )}
+
            {showDownload && (
             <div className="converted-info">
               <span className="heading">Last Converted  </span>
@@ -119,7 +114,7 @@ const Table = ({
       </div>
     </div>
   ) : (
-    <div>No data</div>
+    <div className={`table-container ${isEmployeeTable ? "addemployee" : ""} `}>No data</div>
   );
 };
 

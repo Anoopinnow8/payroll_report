@@ -1,11 +1,11 @@
 .table-container {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 188px);
   display: flex;
   flex-direction: column;
   
 
   &.addemployee {
-    height: calc(100vh - 265px);
+    height: calc(100vh - 234px);
   }
   .action-header {
     height: 60px;

@@ -1,42 +1,47 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
 import Table from "../component/Table";
 import download from "../assets/image/download.png";
 import Employee from "./employee/Index";
-import { debounce, handleSearch } from "../utils/Common";
+import { debounce } from "../utils/Common";
 import { convertedFileByID, getlatest } from "../api/Function";
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
+import { DownLoad } from "../assets/image";
+
 const DataFile = ({
   uploadTabledata = [],
   convertedTableData = [],
   filename = "",
   onDownload = () => {},
   isFileConvert,
-  lastFileConverted,currentTab,onTabSwitch=()=>{}
+  lastFileConverted,
+  currentTab,
+  onTabSwitch = () => {},
 }) => {
   const [uploadsearchQuery, setUploadSearchQuery] = useState("");
   const [previousConvertedData, setPrevConvertedData] = useState([]);
   const [previousConvertedUrl, setPrevConvertedUrl] = useState("");
 
-  const handleChange = (event, newValue) => {
-    onTabSwitch(newValue);
+  const [activeTab, setActiveTab] = useState(currentTab || "1");
+
+  const handleTabChange = (newTab) => {
+    setActiveTab(newTab);
+    onTabSwitch(newTab); // Callback for parent
   };
+
   const debouncedSearch = debounce((query) => {}, 2000);
   const handleSearchInputChange = (e) => {
     const query = e.target.value;
     setUploadSearchQuery(query);
     debouncedSearch(query);
   };
+
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
     );
   });
+
   const filterDataArray = (filteredData) => {
     let result = [];
     for (let i = 0; i < filteredData.length; i++) {
@@ -52,9 +57,9 @@ const DataFile = ({
       }
       result.push(arr);
     }
-
     return result;
   };
+
   const uploadArray = filterDataArray(filteredData);
 
   const convertedfilteredData = convertedTableData.filter((row) => {
@@ -73,6 +78,7 @@ const DataFile = ({
       console.log(error);
     }
   };
+
   useEffect(() => {
     if (previousConvertedData) {
       fetch(previousConvertedUrl)
@@ -85,53 +91,44 @@ const DataFile = ({
             },
             error: (error) => {
               console.error("Error parsing converted file:", error);
-            }
+            },
           });
         })
         .catch((error) => console.log("Error fetching converted file:", error));
     }
   }, [previousConvertedUrl]);
+
   useEffect(() => {
     getLatestConvertedFile();
   }, []);
+
   return (
-    <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={currentTab}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange} aria-label="">
-            <Tab
-              label="Labor Payroll Report"
-              value="1"
-              sx={{
-                maxWidth: "50%",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-            />
-            <Tab
-              label="Converted Labor Payroll Report"
-              value="2"
-              sx={{
-                maxWidth: "50%",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-            />
-            <Tab
-              label="Employee"
-              value="3"
-              sx={{
-                maxWidth: "50%",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis"
-              }}
-            />
-          </TabList>
-        </Box>
-        <TabPanel value="1">
+    <div className="home-container">
+      <div className="home-action-wrapper" >
+        <div className="action-tabs"> 
+        <div
+          onClick={() => handleTabChange("1")}
+          className={`tab ${activeTab === "1" ?"active":""}`}
+        >
+          Labor Payroll Report
+        </div>
+        <div
+          onClick={() => handleTabChange("2")}
+          className={`tab ${activeTab === "2" ?"active":""}`}
+        >
+          Converted Labor Payroll Report
+        </div>
+        <div
+          onClick={() => handleTabChange("3")}
+          className={`tab ${activeTab === "3" ?"active":""}`}
+        >
+          Employee
+        </div>
+        </div>
+   { isFileConvert &&   <button className="download" onClick={onDownload}><img src={DownLoad} alt="download"/> Download </button>}
+      </div>
+      <div className="data-container" >
+        {activeTab === "1" && (
           <Table
             tableColoum={filteredData}
             isUploadTable={true}
@@ -139,8 +136,8 @@ const DataFile = ({
             searchQuery={uploadsearchQuery}
             handleSearchInput={handleSearchInputChange}
           />
-        </TabPanel>
-        <TabPanel value="2">
+        )}
+        {activeTab === "2" && (
           <Table
             tableColoum={convertedfilteredData}
             dataToRender={convertedfilteredData}
@@ -148,15 +145,15 @@ const DataFile = ({
             showDownload={isFileConvert}
             lastFileConverted={lastFileConverted}
           />
-        </TabPanel>
-        <TabPanel value="3">
+        )}
+        {activeTab === "3" && (
           <Employee
             tableColoum={convertedfilteredData}
             dataToRender={convertedfilteredData}
           />
-        </TabPanel>
-      </TabContext>
-    </Box>
+        )}
+      </div>
+    </div>
   );
 };
 
