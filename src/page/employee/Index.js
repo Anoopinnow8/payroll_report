@@ -38,29 +38,35 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
   const handleGetEmployees = async () => {
     setIsFetchingEmp(true);
     try {
-      const res = await getEmployee();
-      if (res.status === 200) {
-        const reorderedEmployees = res.data.map(employee => {
-          return {
-            name: employee.name,
-            emp_id:employee.id,
-            department:employee.department,
-            bil_rate:employee.bil_rate,
-            pay_rate: employee.pay_rate,
-            id: employee.id,
-            ...employee
-          };
-        });
-  
-      
-        setemployeeList(reorderedEmployees);
-      }
+        const res = await getEmployee();
+        if (res.status === 200) {
+            const reorderedEmployees = res.data.map(employee => {
+                const utcDate = new Date(employee.created_at); 
+                const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000)); 
+
+                return {
+                    Name: employee.name,
+                    EmployeeId: employee.id,
+                    Department: employee.department,
+                    BilRate: employee.bil_rate,
+                    PayRate: employee.pay_rate,
+                    ID: employee.id,
+                    CreatedTime: istDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                
+                };
+            });
+
+            setemployeeList(reorderedEmployees);
+            console.log("Employee data fetched successfully");
+        }
     } catch (error) {
-      console.log("error", error);
+        console.log("Error while fetching employee data:", error);
     } finally {
-      setIsFetchingEmp(false);
+        setIsFetchingEmp(false);
     }
-  };
+};
+
+
   
   const handleSearchInputChange = (e) => {
     const query = e.target.value;
