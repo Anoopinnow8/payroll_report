@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import Logo from "../assets/image/payrolllogo.png";
-import User from "../assets/image/user.png";
-import Upload from "../assets/image/upload.png";
-import Convert from "../assets/image/convert.png";
-import DropDown from "../assets/image/dropdown.png";
+import {Upload,Convert,DropDown ,Automate, DownArrow} from "../assets/image";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { Automate, DownArrow } from "../assets/image";
 const Navbar = ({
   onUploadClick = () => {},
   handleFileUpload = () => {},
   fileInputRef,
-  isAutomatate, automateDisable,
-  
+  isAutomatate, 
   onConvertClick = () => {},
   uploadDisable,
   convertDisable,
@@ -68,13 +63,13 @@ const Navbar = ({
           </div>
           <button
             className="automate-btn"
-            disabled={automateDisable}
+            disabled={isAutomatate}
             onClick={onAutomate}
           >
             <img src={Automate} alt="upload" className="icon" lazy="loading" />
             {isAutomatate ? "Automating..." : "Automate"}
           </button>
-        { automateDisable && <span className="last-fetched"> Last fetched <span className="time">{lastAutofetchTime} </span></span>}
+        { isAutomatate &&lastAutofetchTime && <span className="last-fetched"> Last fetched <span className="time">{lastAutofetchTime} </span></span>}
         </div>
         <div className="user-profile">
           <div className="action">
@@ -109,7 +104,7 @@ const Navbar = ({
         <div className="rod"> </div>
         <div className="user-box">
           <span className="text">
-            welecome, <span className="name">username </span>
+            Welecome, <span className="name">UserName </span>
           </span>
           <img
             src={DownArrow}

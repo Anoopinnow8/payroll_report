@@ -15,17 +15,23 @@
       display: flex;
       align-items: center;
       gap: 10px;
-
+     position: relative;
       .search-box {
         padding: 8px;
         color: #787878;
         width: 260px;
         border-radius: 7px;
         border: none;
-      
         height: 40px;
         background-color: #F7FBFF;
         font: 700 12px/14.52px "Inter", sans-serif;
+      }
+      .cross{
+        position: absolute;
+        height: 12px;
+        width: 12px;
+        cursor: pointer;
+        right: 3px;
       }
      
      

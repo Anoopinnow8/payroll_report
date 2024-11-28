@@ -28,7 +28,6 @@ const Home = () => {
 
   const [isLoading, setisLoading] = useState(false);
   const [isAutomatate, setIsAutomate] = useState(false);
-  const[isAutomateDisable,setIsAutomateDisable]=useState(false)
   const [isAutomatedApiCalled, setIsAutomatedApiCalled] = useState(false);
   const [showCalendar, setshowCalandar] = useState(false);
   const [automatedDateRange, setAutomateDateRange] = useState([
@@ -187,7 +186,6 @@ const Home = () => {
         if (result.data.status === "Converted") {
           setAutoMatedFileUrl(result?.data?.output_url);
           setLastAutoConverted(result?.data?.created_at);
-          setIsAutomateDisable(false);
           setIsAutomate(false);
           setCurTab("2");
           toast.success("Automation is complete");
@@ -230,7 +228,6 @@ const Home = () => {
         setLatestConvertedTime(res?.data?.latest?.created_at)
         if (res?.data?.pending !== null) {
           setIsAutomate(true);
-          setIsAutomateDisable(true);
           setLastAutoConverted(res?.data?.pending?.created_at)
           localStorage.setItem("ID", res?.data?.pending?.id);
           startFetchInterval();
@@ -246,7 +243,6 @@ const Home = () => {
       setConvertJsonData(res);
     } catch (error) {}
   };
-
   useEffect(() => {
     if (latestConvertedFileUrl) {
       handleCsvTojsonConvert(latestConvertedFileUrl);
@@ -273,7 +269,6 @@ const Home = () => {
         onLogout={handleLogout}
         onAutomate={handleAutomate}
         isAutomatate={isAutomatate}
-        automateDisable={isAutomateDisable || isAutomatate}
         lastAutofetchTime={lastAutoConverted.split("T")[1]?.slice(0, 5)}
         onDateSelect={setAutomateDateRange}
         onShowCalandar={handleShowCalandar}
@@ -288,7 +283,6 @@ const Home = () => {
         onTabSwitch={handleTabChange}
         uploadTabledata={jsonData}
         convertedTableData={convertjsonData}
-        filename={uploadFile?.name}
         onDownload={handleConvertFileDownload}
         isFileConvert={convertedFileUrl}
         lastFileConverted={handleLastConvertedTime(

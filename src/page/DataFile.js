@@ -7,7 +7,6 @@ import { DownLoad } from "../assets/image";
 const DataFile = ({
   uploadTabledata = [],
   convertedTableData = [],
-  filename = "",
   onDownload = () => {},
   isFileConvert,
   lastFileConverted,
@@ -31,6 +30,10 @@ const DataFile = ({
     setConvertSearchQuery(query);
   
   };
+  const handleClearQuery = () => {
+    setUploadSearchQuery(" ");
+    setConvertSearchQuery(" ")
+  }
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(
       (value) => value !== null && value !== undefined && value !== ""
@@ -108,6 +111,7 @@ const DataFile = ({
             dataToRender={uploadSearchData}
             searchQuery={uploadsearchQuery}
             handleSearchInput={handleSearchInputChange}
+            onSearchClear={handleClearQuery}
           />
         )}
         {activeTab === "2" && (
@@ -119,6 +123,7 @@ const DataFile = ({
             lastFileConverted={lastFileConverted}
             searchQuery={convertsearchQuery}
             handleSearchInput={handleConvertSearch}
+            onSearchClear={handleClearQuery}
           />
         )}
         {activeTab === "3" && (

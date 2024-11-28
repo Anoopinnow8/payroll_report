@@ -3,7 +3,6 @@ import Table from "../../component/Table";
 import AddEmployee from "./AddEmployee";
 import Skeleton from "react-loading-skeleton";
 import { handleSearch } from "../../utils/Common";
-
 import { createEmployee, getEmployee } from "../../api/Function";
 import { toast } from "react-toastify";
 import Loader from "../../component/Loader";
@@ -68,6 +67,9 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
     setSearchQuery(query);
   
   };
+  const handleClearQuery = () => {
+    setSearchQuery(" ");
+  }
   useEffect(() => {
     handleGetEmployees();
   }, []);
@@ -90,6 +92,7 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
               isEmployeeTable={true}
               searchQuery={searchQuery}
               handleSearchInput={handleSearchInputChange}
+              onSearchClear={handleClearQuery}
           />
         </div>
       )}

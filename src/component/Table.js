@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender
 } from "@tanstack/react-table";
-import Calender from "../assets/image/calendar.png";
+import { Cross } from "../assets/image";
 
 const truncateText = (text) => {
   if (text && text.length > 23) {
@@ -19,7 +19,8 @@ const Table = ({
   isUploadTable = false,
   searchQuery = "",
   handleSearchInput,
-  lastFileConverted
+  lastFileConverted,
+  onSearchClear=()=>{}
 }) => {
   const columns = useMemo(() => {
     if (!Array.isArray(tableColoum) || tableColoum.length === 0) return [];
@@ -53,25 +54,23 @@ const Table = ({
     columns,
     getCoreRowModel: getCoreRowModel()
   });
-
   return tableColoum.length !== 0 ? (
-    <div className='table-container'>
+    <div className="table-container">
       <div className="action-header">
         <div className="sort-action">
-        
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search"
             value={searchQuery}
             onChange={handleSearchInput}
             className="search-box"
           />
+       {/* { searchQuery &&  <img src={Cross} alt="cross" className="cross" onClick={ onSearchClear}/>} */}
         </div>
         <div className="user-action">
-
-           {lastFileConverted && (
+          {lastFileConverted && (
             <div className="converted-info">
-              <span className="heading">Last Converted  </span>
+              <span className="heading">Last Converted </span>
               <span className="info"> {lastFileConverted}</span>
             </div>
           )}
@@ -108,10 +107,9 @@ const Table = ({
       </div>
     </div>
   ) : (
-      <div className='table-container' >
-        <div className="no-data">    No data </div>
-     
-      </div>
+    <div className="table-container">
+      <div className="no-data"> No data </div>
+    </div>
   );
 };
 
