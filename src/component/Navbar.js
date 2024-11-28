@@ -69,7 +69,7 @@ const Navbar = ({
             <img src={Automate} alt="upload" className="icon" lazy="loading" />
             {isAutomatate ? "Automating..." : "Automate"}
           </button>
-        { isAutomatate &&lastAutofetchTime && <span className="last-fetched"> Last fetched <span className="time">{lastAutofetchTime} </span></span>}
+        { isAutomatate &&lastAutofetchTime && <span className="last-fetched"> Intiated at <span className="time">{lastAutofetchTime} </span></span>}
         </div>
         <div className="user-profile">
           <div className="action">
