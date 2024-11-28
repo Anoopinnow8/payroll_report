@@ -4,7 +4,8 @@ export const handleFileConvert = async (
   uploadFile,
   setConvertedFileUrl,
   setisLoading,
-  setLastConverted
+  setLastConverted,
+  setCurTab=()=>{}
 ) => {
   if (!uploadFile) return;
   setisLoading(true);
@@ -31,6 +32,7 @@ export const handleFileConvert = async (
       setConvertedFileUrl(result.file_url);
       setLastConverted(result.created_at);
       toast.success("File converted successfully");
+      setCurTab("2")
     } else {
       toast.error("Conversion failed. No file URL returned.");
     }

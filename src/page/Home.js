@@ -101,7 +101,8 @@ const Home = () => {
       uploadFile,
       setConvertedFileUrl,
       setisLoading,
-      setLastConverted
+      setLastConverted,
+      setCurTab,
     );
   };
   const handleLastConvertedTime = (data) => {
@@ -259,6 +260,7 @@ const Home = () => {
   useEffect(() => {
     getLatestConvertedFile()
   }, [autoMatedFileUrl, convertedFileUrl])
+
   return (
     <div className="main-container">
       <Navbar
@@ -282,7 +284,7 @@ const Home = () => {
       />
 
       <DataFile
-        currentTab={curTab}
+        activeTab={curTab}
         onTabSwitch={handleTabChange}
         uploadTabledata={jsonData}
         convertedTableData={convertjsonData}

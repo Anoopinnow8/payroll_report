@@ -11,18 +11,13 @@ const DataFile = ({
   onDownload = () => {},
   isFileConvert,
   lastFileConverted,
-  currentTab,
+  activeTab,
   onTabSwitch = () => {}
 }) => {
-  const [activeTab, setActiveTab] = useState(currentTab || "1");
   const [uploadsearchQuery, setUploadSearchQuery] = useState("");
   const [convertsearchQuery, setConvertSearchQuery] = useState("");
   const [addEmployee, setaddEmployee] = useState(false);
 
-  const handleTabChange = (newTab) => {
-    setActiveTab(newTab);
-    onTabSwitch(newTab);
-  };
   const handleEmployeeModal = () => {
     setaddEmployee(!addEmployee);
   };
@@ -70,25 +65,24 @@ const DataFile = ({
   const uploadSearchData = handleSearch(uploadArray.slice(1), uploadsearchQuery)
   const convertSearchData=handleSearch(convertedfilteredData,convertsearchQuery)
 
-
   return (
     <div className="home-container">
       <div className="home-action-wrapper">
         <div className="action-tabs">
           <div
-            onClick={() => handleTabChange("1")}
+            onClick={() => onTabSwitch("1")}
             className={`tab ${activeTab === "1" ? "active" : ""}`}
           >
             Labor Payroll Report
           </div>
           <div
-            onClick={() => handleTabChange("2")}
+            onClick={() => onTabSwitch("2")}
             className={`tab ${activeTab === "2" ? "active" : ""}`}
           >
             Converted Labor Payroll Report
           </div>
           <div
-            onClick={() => handleTabChange("3")}
+            onClick={() => onTabSwitch("3")}
             className={`tab ${activeTab === "3" ? "active" : ""}`}
           >
             Employee
