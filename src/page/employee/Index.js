@@ -57,7 +57,7 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
             });
 
             setemployeeList(reorderedEmployees);
-            console.log("Employee data fetched successfully");
+         
         }
     } catch (error) {
         console.log("Error while fetching employee data:", error);

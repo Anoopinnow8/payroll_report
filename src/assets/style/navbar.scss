@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: space-between;
     height: 100%;
-    padding: 10px ;
+    padding: 6px 10px ;
     .logo {
       width: 200px;
       height: 35px;
@@ -20,9 +20,12 @@
     }
     .automate-box {
       display: flex;
-    
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      .action-box{
+        display: flex;
+        gap: 8px;
       .date-box {
         width: 218px;
         background-color: #fff;
@@ -118,11 +121,12 @@
           background-color:#BBBBBB;
         }
       }
+    }
       .last-fetched{
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
+        
+        align-items: center;
+        gap: 6px;
         color: #000000;
         font: 600 14px/19.36px "Inter", sans-serif;
         .time{

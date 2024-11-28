@@ -76,14 +76,14 @@ const Table = ({
             <img src={Search} alt="search" className="search" />
           )}
         </div>
-        <div className="user-action">
+        {/* <div className="user-action">
           {lastFileConverted && (
             <div className="converted-info">
               <span className="heading">Last Converted </span>
               <span className="info"> {lastFileConverted}</span>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
       <div className="table-wrapper">
         <table className="data-table">

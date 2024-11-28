@@ -67,7 +67,6 @@ const DataFile = ({
   });
   const uploadSearchData = handleSearch(uploadArray.slice(1), uploadsearchQuery)
   const convertSearchData=handleSearch(convertedfilteredData,convertsearchQuery)
-
   return (
     <div className="home-container">
       <div className="home-action-wrapper">

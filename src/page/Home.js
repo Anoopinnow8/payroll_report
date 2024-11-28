@@ -16,6 +16,8 @@ const Home = () => {
   const [curTab, setCurTab] = useState("1");
   const [uploadFile, setUploadFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
+const [latestUploadFileUrl, setLatestUploadFileUrl] = useState("");
+const [lastUploadData, setLastUploadData] = useState([])
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [autoMatedFileUrl, setAutoMatedFileUrl] = useState("");
@@ -107,12 +109,23 @@ const Home = () => {
   const handleLastConvertedTime = (data) => {
     if (data) {
       const dateObj = new Date(data);
-      const day = dateObj.getDate().toString().padStart(2, '0'); 
-      const year = dateObj.getFullYear();
-      const formattedDate = `${day}-${(dateObj.getMonth() + 1).toString().padStart(2, '0')}-${year}`; 
-      const time = dateObj.toTimeString().slice(0, 5); 
   
-      return `${time} , ${formattedDate}`;
+      const IST_OFFSET = 5.5 * 60 * 60 * 1000;
+      const istDateObj = new Date(dateObj.getTime() + IST_OFFSET);
+  
+      const day = istDateObj.getDate().toString().padStart(2, '0');
+      const month = (istDateObj.getMonth() + 1).toString().padStart(2, '0');
+      const year = istDateObj.getFullYear();
+  
+      let hours = istDateObj.getHours();
+      const minutes = istDateObj.getMinutes().toString().padStart(2, '0');
+      const amPm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12; 
+  
+      const formattedDate = `${day}-${month}-${year}`;
+      const formattedTime = `${hours}:${minutes} ${amPm}`;
+  
+      return `${formattedTime} , ${formattedDate}`;
     } else {
       return " ";
     }
@@ -183,6 +196,10 @@ const Home = () => {
     try {
       const result = await AutomateConvertedFileByID(id);
       if (result.status === 200) {
+        if (result.data.status === "Initiated") {
+          setLastAutoConverted(result?.data?.created_at);
+         }
+
         if (result.data.status === "Converted") {
           setAutoMatedFileUrl(result?.data?.output_url);
           setLastAutoConverted(result?.data?.created_at);
@@ -221,10 +238,12 @@ const Home = () => {
     }
   };
   const getLatestConvertedFile = async () => {
+    setisLoading(true);
     try {
       const res = await getlatest();
       if (res.status === 200) {
         setLatestConvertedFileUrl(res?.data?.latest?.output_url);
+        setLatestUploadFileUrl(res?.data?.latest?.input_url)
         setLatestConvertedTime(res?.data?.latest?.created_at)
         if (res?.data?.pending !== null) {
           setIsAutomate(true);
@@ -235,6 +254,9 @@ const Home = () => {
       }
     } catch (error) {
       console.log(error);
+    }
+    finally {
+      setisLoading(false);
     }
   };
   const handleCsvTojsonConvert = async (url) => {
@@ -257,6 +279,24 @@ const Home = () => {
     getLatestConvertedFile()
   }, [autoMatedFileUrl, convertedFileUrl])
 
+  const handleUploadCsvTojsonConvert = async (url) => {
+    setisLoading(true);
+    try {
+      const res = await convertCsvToJson(url);
+      const arrayOfArrays = res?.map(obj => Object.values(obj));
+      setLastUploadData(arrayOfArrays);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    finally {
+      setisLoading(false);
+    }
+  };
+  
+ 
+  useEffect(() => {
+    handleUploadCsvTojsonConvert(latestUploadFileUrl)
+  },[latestUploadFileUrl])
   return (
     <div className="main-container">
       <Navbar
@@ -269,19 +309,22 @@ const Home = () => {
         onLogout={handleLogout}
         onAutomate={handleAutomate}
         isAutomatate={isAutomatate}
-        lastAutofetchTime={lastAutoConverted.split("T")[1]?.slice(0, 5)}
+        lastAutofetchTime={handleLastConvertedTime(lastAutoConverted)}
         onDateSelect={setAutomateDateRange}
         onShowCalandar={handleShowCalandar}
         dateRange={automatedDateRange}
         showCalendar={showCalendar}
         startDate={formatDate(automatedDateRange[0].startDate)}
         endDate={formatDate(automatedDateRange[0].endDate)}
+        lastFileConverted={handleLastConvertedTime(
+          latestConvertedTime?latestConvertedTime: lastAutoConverted?lastAutoConverted:lastConverted
+        )}
       />
 
       <DataFile
         activeTab={curTab}
         onTabSwitch={handleTabChange}
-        uploadTabledata={jsonData}
+        uploadTabledata={jsonData.length !==0?jsonData:lastUploadData.length !==0?lastUploadData:[]}
         convertedTableData={convertjsonData}
         onDownload={handleConvertFileDownload}
         isFileConvert={latestConvertedFileUrl}
