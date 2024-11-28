@@ -7,7 +7,7 @@ import { handleSearch } from "../../utils/Common";
 import { createEmployee, getEmployee } from "../../api/Function";
 import { toast } from "react-toastify";
 import Loader from "../../component/Loader";
-const Employee = ({  showModal,onCloseModal=()=>{}}) => {
+const Employee = ({showModal,onCloseModal=()=>{}}) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isFetchingEmp, setIsFetchingEmp] = useState(false);
   const [employeeList, setemployeeList] = useState([]);
@@ -72,7 +72,7 @@ const Employee = ({  showModal,onCloseModal=()=>{}}) => {
     handleGetEmployees();
   }, []);
   
-  const SearchData = handleSearch(employeeList, handleSearchInputChange)
+  const SearchData = handleSearch(employeeList, searchQuery)
   return (
     <div className="employee-wrapper0">
      

@@ -16,15 +16,9 @@ const truncateText = (text) => {
 const Table = ({
   tableColoum = [],
   dataToRender = [],
-  name = "",
   isUploadTable = false,
-  isEmployeeTable = false,
   searchQuery = "",
-  setSearchQuery = () => {},
-  onDownload = () => {},
-  showDownload = false,
   handleSearchInput,
-  onAutomateClick = () => {},
   lastFileConverted
 }) => {
   const columns = useMemo(() => {
