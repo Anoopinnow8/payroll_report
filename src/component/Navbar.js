@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Logo from "../assets/image/payrolllogo.png";
-import {Upload,Convert,DropDown ,Automate, DownArrow} from "../assets/image";
+import Logo11 from "../assets/image/payrolllogo.png";
+import {Upload,Convert,DropDown ,Automate, DownArrow, Logo,UploadDisable,ConvertDisable, UserIcon} from "../assets/image";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -78,7 +78,7 @@ const Navbar = ({
               disabled={uploadDisable}
               onClick={onUploadClick}
             >
-              <img src={Upload} alt="upload" className="icon" lazy="loading" />
+              <img src={uploadDisable?UploadDisable:Upload} alt="upload" className="icon" lazy="loading" />
               Upload File
               <input
                 type="file"
@@ -94,7 +94,7 @@ const Navbar = ({
               disabled={convertDisable}
               onClick={onConvertClick}
             >
-              <img src={Convert} alt="upload" className="icon" lazy="loading" />
+              <img src={convertDisable?ConvertDisable:Convert} alt="upload" className="icon" lazy="loading" />
               Convert File
             </button>
           </div>
@@ -106,6 +106,13 @@ const Navbar = ({
           <span className="text">
             Welecome, <span className="name">UserName </span>
           </span>
+          <img
+            src={UserIcon}
+            alt="user-icon"
+            lazy="loading"
+            className="user-icon"
+            onClick={handleShowUserBox}
+          />
           <img
             src={DownArrow}
             alt="down"

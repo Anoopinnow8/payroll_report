@@ -68,7 +68,7 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
   
   };
   const handleClearQuery = () => {
-    setSearchQuery(" ");
+    setSearchQuery("");
   }
   useEffect(() => {
     handleGetEmployees();

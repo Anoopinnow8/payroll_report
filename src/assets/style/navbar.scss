@@ -16,7 +16,7 @@
       width: 200px;
       height: 35px;
       object-fit: contain;
-      mix-blend-mode: color-burn;
+      mix-blend-mode: luminosity;
     }
     .automate-box {
       display: flex;
@@ -100,6 +100,7 @@
 
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         background-color: #ff8678;
         color: #fff;
@@ -114,7 +115,7 @@
         }
         &:disabled {
           cursor: not-allowed;
-          opacity: 0.5;
+          background-color:#BBBBBB;
         }
       }
       .last-fetched{
@@ -164,12 +165,12 @@
           font: 700 16px/19.3px "Inter", sans-serif;
         
           &:hover {
-            background-color: #fff;
-            border-radius: 8px;
+            // background-color: #fff;
+            // border-radius: 8px;
           }
           &:disabled {
             cursor: not-allowed;
-            opacity: 0.5;
+            color:#BBBBBB;
           }
         }
       }
@@ -197,6 +198,9 @@
       justify-content: center;
       gap: 8px;
       .aroow{
+        cursor: pointer;
+      }
+      .user-icon{
         cursor: pointer;
       }
       .text{

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Table from "../component/Table";
 import Employee from "./employee/Index";
 import { handleSearch } from "../utils/Common";
-import { DownLoad } from "../assets/image";
+import { DownLoad ,Add} from "../assets/image";
 
 const DataFile = ({
   uploadTabledata = [],
@@ -31,8 +31,8 @@ const DataFile = ({
   
   };
   const handleClearQuery = () => {
-    setUploadSearchQuery(" ");
-    setConvertSearchQuery(" ")
+    setUploadSearchQuery("");
+    setConvertSearchQuery("")
   }
   const filteredData = uploadTabledata.filter((row) => {
     return Object.values(row).some(
@@ -98,7 +98,7 @@ const DataFile = ({
         )}
         {activeTab === "3" && (
           <button className="download" onClick={handleEmployeeModal}>
-          
+            <img src={Add} alt="download" />
             Add Employee
           </button>
         )}

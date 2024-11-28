@@ -118,10 +118,10 @@ const Home = () => {
     }
   };
   const handleConvertFileDownload = () => {
-    fetch(convertedFileUrl)
+    fetch(latestConvertedFileUrl)
       .then((response) => response.blob())
       .then((blob) => {
-        const filename = convertedFileUrl.split("/").pop();
+        const filename = latestConvertedFileUrl?.split("/").pop();
         saveAs(blob, filename);
       })
       .catch((error) => console.error("Error downloading the file:", error));
@@ -284,7 +284,7 @@ const Home = () => {
         uploadTabledata={jsonData}
         convertedTableData={convertjsonData}
         onDownload={handleConvertFileDownload}
-        isFileConvert={convertedFileUrl}
+        isFileConvert={latestConvertedFileUrl}
         lastFileConverted={handleLastConvertedTime(
           latestConvertedTime?latestConvertedTime: lastAutoConverted?lastAutoConverted:lastConverted
         )}

@@ -17,21 +17,31 @@
       gap: 10px;
      position: relative;
       .search-box {
-        padding: 8px;
+        padding: 8px 24px;
         color: #787878;
-        width: 260px;
+        width: 230px;
         border-radius: 7px;
         border: none;
         height: 40px;
-        background-color: #F7FBFF;
+        background-color: #FFF8F3;
         font: 700 12px/14.52px "Inter", sans-serif;
+        &:focus-visible{
+          outline: none;
+        }
       }
       .cross{
         position: absolute;
-        height: 12px;
-        width: 12px;
+        height: 16px;
+        width: 16px;
         cursor: pointer;
-        right: 3px;
+        right: 6px;
+      }
+      .search{
+        position: absolute;
+        height: 14px;
+        width: 14px;
+        cursor: pointer;
+        left: 6px;
       }
      
      
@@ -125,7 +135,7 @@
 
       tr {
         &:nth-child(odd) {
-          background-color: #F1F9FF;
+          background-color: #fffbf9;
         }
 
         &:nth-child(even) {

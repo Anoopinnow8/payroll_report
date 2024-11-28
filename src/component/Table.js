@@ -4,7 +4,7 @@ import {
   getCoreRowModel,
   flexRender
 } from "@tanstack/react-table";
-import { Cross } from "../assets/image";
+import { Cross, Search } from "../assets/image";
 
 const truncateText = (text) => {
   if (text && text.length > 23) {
@@ -20,7 +20,7 @@ const Table = ({
   searchQuery = "",
   handleSearchInput,
   lastFileConverted,
-  onSearchClear=()=>{}
+  onSearchClear = () => {}
 }) => {
   const columns = useMemo(() => {
     if (!Array.isArray(tableColoum) || tableColoum.length === 0) return [];
@@ -54,7 +54,7 @@ const Table = ({
     columns,
     getCoreRowModel: getCoreRowModel()
   });
-  return tableColoum.length !== 0 ? (
+  return tableColoum?.length !== 0 ? (
     <div className="table-container">
       <div className="action-header">
         <div className="sort-action">
@@ -65,7 +65,16 @@ const Table = ({
             onChange={handleSearchInput}
             className="search-box"
           />
-       {/* { searchQuery &&  <img src={Cross} alt="cross" className="cross" onClick={ onSearchClear}/>} */}
+          {searchQuery !== "" ? (
+            <img
+              src={Cross}
+              alt="cross"
+              className="cross"
+              onClick={onSearchClear}
+            />
+          ) : (
+            <img src={Search} alt="search" className="search" />
+          )}
         </div>
         <div className="user-action">
           {lastFileConverted && (
@@ -92,17 +101,24 @@ const Table = ({
               </tr>
             ))}
           </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
+          {dataToRender?.length !== 0 ? (
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          ) : (
+            <span> No result found </span>
+          )}
         </table>
       </div>
     </div>
