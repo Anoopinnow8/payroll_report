@@ -9,7 +9,7 @@ import {
   Logo,
   UploadDisable,
   ConvertDisable,
-  UserIcon
+  UserIcon,Logout
 } from "../assets/image";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css";
@@ -162,7 +162,13 @@ const Navbar = ({
             className="aroow"
             onClick={handleShowUserBox}
           /> */}
-           <button className="logoutbutton" onClick={onLogout}>
+          <button className="logoutbutton" onClick={onLogout}>
+          <img
+                src={Logout}
+                alt="logout"
+                className="icon"
+                lazy="loading"
+              />
               Logout
             </button>
         </div>

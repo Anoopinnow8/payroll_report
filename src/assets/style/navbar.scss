@@ -213,20 +213,22 @@
         flex-direction: column;
       }
       .logoutbutton{
-      
-          font-size: 1.1rem;
-          line-height: 1.25rem;
-          margin: 6px 0px;
-          cursor: pointer;
-          background-color: #FF8678;
-          padding: 6px 10px;
-          letter-spacing: 0.2px;
-          color: #fff;
-          font-weight: 600;
-          cursor: pointer;
-          border-radius: 8px;
-          width: 120px;
-          border: none;
+      width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-color: #ff8678;
+        color: #fff;
+        height: 36px;
+        border:none;
+        border-radius: 8px;
+        font: 700 16px/19.3px "Inter", sans-serif;
+        cursor: pointer;
+          .icon{
+            width: 18px;
+            height: 18px;
+          }
       
       }
     }

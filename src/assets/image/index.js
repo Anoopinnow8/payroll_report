@@ -11,6 +11,8 @@ import Logo from "./logonew.png";
 import Search from "./search.png";
 import Add from "./add.png";
 import UserIcon from "./usericon.png";
+import Logout from "./logout.png";
+
 
 
 
@@ -24,5 +26,5 @@ import UserIcon from "./usericon.png";
 
 
 export {
-  Automate ,DownArrow,DownLoad,Upload,Convert,DropDown,Cross,Logo,Search,Add,UploadDisable,ConvertDisable,UserIcon
+  Automate ,DownArrow,DownLoad,Upload,Convert,DropDown,Cross,Logo,Search,Add,UploadDisable,ConvertDisable,UserIcon,Logout
 }
