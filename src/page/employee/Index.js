@@ -46,7 +46,7 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
 
                 return {
                     Name: employee.name,
-                    EmployeeId: employee.id,
+                    EmployeeId: employee.emp_id,
                     Department: employee.department,
                     BilRate: employee.bil_rate,
                     PayRate: employee.pay_rate,
@@ -79,7 +79,7 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
   useEffect(() => {
     handleGetEmployees();
   }, []);
-  
+  console.log(employeeList);
   const SearchData = handleSearch(employeeList, searchQuery)
   return (
     <div className="employee-wrapper0">
