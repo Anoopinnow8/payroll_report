@@ -145,7 +145,7 @@ const Navbar = ({
       <div className="user-info-wrapper">
         <div className="rod"> </div>
         <div className="user-box">
-          <span className="text">
+          {/* <span className="text">
             Welecome, <span className="name">UserName </span>
           </span>
           <img
@@ -161,10 +161,13 @@ const Navbar = ({
             lazy="loading"
             className="aroow"
             onClick={handleShowUserBox}
-          />
+          /> */}
+           <button className="logoutbutton" onClick={onLogout}>
+              Logout
+            </button>
         </div>
       </div>
-      {showModal && (
+      {/* {showModal && (
         <div className="user-modal-container">
           <div className="header">
             <span className="name-text">User Name</span>
@@ -178,7 +181,7 @@ const Navbar = ({
             </span>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -212,6 +212,23 @@
         display: flex;
         flex-direction: column;
       }
+      .logoutbutton{
+      
+          font-size: 1.1rem;
+          line-height: 1.25rem;
+          margin: 6px 0px;
+          cursor: pointer;
+          background-color: #FF8678;
+          padding: 6px 10px;
+          letter-spacing: 0.2px;
+          color: #fff;
+          font-weight: 600;
+          cursor: pointer;
+          border-radius: 8px;
+          width: 120px;
+          border: none;
+      
+      }
     }
   }
 
