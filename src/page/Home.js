@@ -8,7 +8,11 @@ import { handleFileConvert } from "../api/FileApi";
 import { useNavigate } from "react-router";
 import { saveAs } from "file-saver";
 import Navbar from "../component/Navbar";
-import { AutomateConvertedFileByID, getIntiate ,getlatest} from "../api/Function";
+import {
+  AutomateConvertedFileByID,
+  getIntiate,
+  getlatest
+} from "../api/Function";
 import { convertCsvToJson } from "../utils/ConvertJson";
 import triggerApiRequest from "../api/AutomateApi";
 const Home = () => {
@@ -16,13 +20,12 @@ const Home = () => {
   const [curTab, setCurTab] = useState("1");
   const [uploadFile, setUploadFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
-const [latestUploadFileUrl, setLatestUploadFileUrl] = useState("");
-const [lastUploadData, setLastUploadData] = useState([])
+  const [latestUploadFileUrl, setLatestUploadFileUrl] = useState("");
+  const [lastUploadData, setLastUploadData] = useState([]);
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [autoMatedFileUrl, setAutoMatedFileUrl] = useState("");
   const [latestConvertedFileUrl, setLatestConvertedFileUrl] = useState("");
-
 
   const [lastConverted, setLastConverted] = useState("");
   const [lastAutoConverted, setLastAutoConverted] = useState("");
@@ -103,28 +106,28 @@ const [lastUploadData, setLastUploadData] = useState([])
       setConvertedFileUrl,
       setisLoading,
       setLastConverted,
-      setCurTab,
+      setCurTab
     );
   };
   const handleLastConvertedTime = (data) => {
     if (data) {
       const dateObj = new Date(data);
-  
+
       const IST_OFFSET = 5.5 * 60 * 60 * 1000;
       const istDateObj = new Date(dateObj.getTime() + IST_OFFSET);
-  
-      const day = istDateObj.getDate().toString().padStart(2, '0');
-      const month = (istDateObj.getMonth() + 1).toString().padStart(2, '0');
+
+      const day = istDateObj.getDate().toString().padStart(2, "0");
+      const month = (istDateObj.getMonth() + 1).toString().padStart(2, "0");
       const year = istDateObj.getFullYear();
-  
+
       let hours = istDateObj.getHours();
-      const minutes = istDateObj.getMinutes().toString().padStart(2, '0');
-      const amPm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12; 
-  
+      const minutes = istDateObj.getMinutes().toString().padStart(2, "0");
+      const amPm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+
       const formattedDate = `${day}-${month}-${year}`;
       const formattedTime = `${hours}:${minutes} ${amPm}`;
-  
+
       return `${formattedTime} , ${formattedDate}`;
     } else {
       return " ";
@@ -179,7 +182,6 @@ const [lastUploadData, setLastUploadData] = useState([])
       const result = await triggerApiRequest(data);
 
       if (result.status === 202) {
-     
         setIsAutomatedApiCalled(true);
         startFetchInterval();
         setIsAutomate(true);
@@ -198,7 +200,7 @@ const [lastUploadData, setLastUploadData] = useState([])
       if (result.status === 200) {
         if (result.data.status === "Initiated") {
           setLastAutoConverted(result?.data?.created_at);
-         }
+        }
 
         if (result.data.status === "Converted") {
           setAutoMatedFileUrl(result?.data?.output_url);
@@ -206,15 +208,13 @@ const [lastUploadData, setLastUploadData] = useState([])
           setIsAutomate(false);
           setCurTab("2");
           toast.success("Automation is complete");
-          return true;
+          return "stop";
         }
         if (result.data.status === "Failed") {
-        
-        
           setIsAutomate(false);
-      
+
           toast.error("Something went wrong");
-          return false;
+          return "stop";
         }
       }
     } catch (error) {
@@ -224,16 +224,15 @@ const [lastUploadData, setLastUploadData] = useState([])
   };
 
   const startFetchInterval = async () => {
-   
     let isFetched;
     isFetched = await handleFetchAutomatedFile();
 
     const id = setInterval(async () => {
       let isFetched = await handleFetchAutomatedFile();
-      isFetched && clearInterval(id);
+      isFetched === "stop" && clearInterval(id);
     }, 20000);
 
-    if (isFetched) {
+    if (isFetched === "stop") {
       clearInterval(id);
     }
   };
@@ -243,60 +242,60 @@ const [lastUploadData, setLastUploadData] = useState([])
       const res = await getlatest();
       if (res.status === 200) {
         setLatestConvertedFileUrl(res?.data?.latest?.output_url);
-        setLatestUploadFileUrl(res?.data?.latest?.input_url)
-        setLatestConvertedTime(res?.data?.latest?.created_at)
+        setLatestUploadFileUrl(res?.data?.latest?.input_url);
+        setLatestConvertedTime(res?.data?.latest?.created_at);
         if (res?.data?.pending !== null) {
           setIsAutomate(true);
-          setLastAutoConverted(res?.data?.pending?.created_at)
+          setLastAutoConverted(res?.data?.pending?.created_at);
           localStorage.setItem("ID", res?.data?.pending?.id);
           startFetchInterval();
         }
       }
     } catch (error) {
       console.log(error);
-    }
-    finally {
+    } finally {
       setisLoading(false);
     }
   };
   const handleCsvTojsonConvert = async (url) => {
     try {
-      const res = await convertCsvToJson(url);
-      setConvertJsonData(res);
+      if (url) {
+        const res = await convertCsvToJson(url);
+        setConvertJsonData(res);
+      }
     } catch (error) {}
   };
   useEffect(() => {
     if (latestConvertedFileUrl) {
       handleCsvTojsonConvert(latestConvertedFileUrl);
-    }
-   else if (autoMatedFileUrl) {
+    } else if (autoMatedFileUrl) {
       handleCsvTojsonConvert(autoMatedFileUrl);
     } else if (convertedFileUrl) {
       handleCsvTojsonConvert(convertedFileUrl);
     }
-  }, [latestConvertedFileUrl,autoMatedFileUrl, convertedFileUrl]);
+  }, [latestConvertedFileUrl, autoMatedFileUrl, convertedFileUrl]);
   useEffect(() => {
-    getLatestConvertedFile()
-  }, [autoMatedFileUrl, convertedFileUrl])
+    getLatestConvertedFile();
+  }, [autoMatedFileUrl, convertedFileUrl]);
 
   const handleUploadCsvTojsonConvert = async (url) => {
     setisLoading(true);
     try {
-      const res = await convertCsvToJson(url);
-      const arrayOfArrays = res?.map(obj => Object.values(obj));
-      setLastUploadData(arrayOfArrays);
+      if (url) {
+        const res = await convertCsvToJson(url);
+        const arrayOfArrays = res?.map((obj) => Object.values(obj));
+        setLastUploadData(arrayOfArrays);
+      }
     } catch (error) {
       console.error("Error:", error);
-    }
-    finally {
+    } finally {
       setisLoading(false);
     }
   };
-  
- 
+
   useEffect(() => {
-    handleUploadCsvTojsonConvert(latestUploadFileUrl)
-  },[latestUploadFileUrl])
+    handleUploadCsvTojsonConvert(latestUploadFileUrl);
+  }, [latestUploadFileUrl]);
   return (
     <div className="main-container">
       <Navbar
@@ -317,19 +316,33 @@ const [lastUploadData, setLastUploadData] = useState([])
         startDate={formatDate(automatedDateRange[0].startDate)}
         endDate={formatDate(automatedDateRange[0].endDate)}
         lastFileConverted={handleLastConvertedTime(
-          latestConvertedTime?latestConvertedTime: lastAutoConverted?lastAutoConverted:lastConverted
+          latestConvertedTime
+            ? latestConvertedTime
+            : lastAutoConverted
+            ? lastAutoConverted
+            : lastConverted
         )}
       />
 
       <DataFile
         activeTab={curTab}
         onTabSwitch={handleTabChange}
-        uploadTabledata={jsonData.length !==0?jsonData:lastUploadData.length !==0?lastUploadData:[]}
+        uploadTabledata={
+          jsonData.length !== 0
+            ? jsonData
+            : lastUploadData.length !== 0
+            ? lastUploadData
+            : []
+        }
         convertedTableData={convertjsonData}
         onDownload={handleConvertFileDownload}
         isFileConvert={latestConvertedFileUrl}
         lastFileConverted={handleLastConvertedTime(
-          latestConvertedTime?latestConvertedTime: lastAutoConverted?lastAutoConverted:lastConverted
+          latestConvertedTime
+            ? latestConvertedTime
+            : lastAutoConverted
+            ? lastAutoConverted
+            : lastConverted
         )}
       />
       {isLoading && <Loader />}
