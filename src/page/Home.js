@@ -15,7 +15,7 @@ import {
 } from "../api/Function";
 import { convertCsvToJson } from "../utils/ConvertJson";
 import triggerApiRequest from "../api/AutomateApi";
-import { handleLastConvertedTime ,formatDate} from "../utils/Common";
+import { handleLastConvertedTime, formatDate } from "../utils/Common";
 const Home = () => {
   const navigate = useNavigate();
   const [curTab, setCurTab] = useState("1");
@@ -254,7 +254,19 @@ const Home = () => {
     try {
       if (url) {
         const res = await convertCsvToJson(url);
-        const arrayOfArrays = res?.map((obj) => Object.values(obj));
+
+        const transformedData = res?.map((obj) => {
+          const employeeId = obj["Employee ID"] || obj["Unnamed: 0"];
+          const { "Unnamed: 0": _, ...rest } = obj;
+          return { ...rest, "Employee ID": employeeId };
+        });
+
+        const headers = Object.keys(transformedData[0]);
+
+        const dataRows = transformedData.map((obj) => Object.values(obj));
+
+        const arrayOfArrays = [headers, ...dataRows];
+
         setLastUploadData(arrayOfArrays);
       }
     } catch (error) {
@@ -267,6 +279,7 @@ const Home = () => {
   useEffect(() => {
     handleUploadCsvTojsonConvert(latestUploadFileUrl);
   }, [latestUploadFileUrl]);
+
   return (
     <div className="main-container">
       <Navbar
