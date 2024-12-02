@@ -79,7 +79,6 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
   useEffect(() => {
     handleGetEmployees();
   }, []);
-  console.log(employeeList);
   const SearchData = handleSearch(employeeList, searchQuery)
   return (
     <div className="employee-wrapper0">
