@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 
 
 export const handleSearch = (arr, querys) => {
@@ -18,30 +19,10 @@ export const handleSearch = (arr, querys) => {
 
 
 export const handleLastConvertedTime = (data) => {
+  console.log(data,"ghghgh")
   if (data) {
-    const dateObj = new Date(data);
-
-    // IST Offset
-    const IST_OFFSET = 5.5 * 60 * 60 * 1000;
-    const istDateObj = new Date(dateObj.getTime() + IST_OFFSET);
-
-    const day = istDateObj.getDate().toString().padStart(2, "0");
-    const month = istDateObj.toLocaleString('default', { month: 'short' }); // Get abbreviated month name
-    const year = istDateObj.getFullYear();
-
-    let hours = istDateObj.getHours();
-    const minutes = istDateObj.getMinutes().toString().padStart(2, "0");
-    const amPm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
-
-    // Ensure two-digit hour formatting
-    const formattedHours = hours.toString().padStart(2, "0");
-
-    // Format in the desired way
-    const formattedTime = `${formattedHours}:${minutes} ${amPm}`;
-    const formattedDate = `${day} ${month} ${year}`;
-
-    return `${formattedTime} , ${formattedDate}`;
+   const result= moment.utc(data).local().format("hh:mm A, DD MMM, YYYY");
+    return result ;
   } else {
     return " ";
   }
