@@ -6,12 +6,14 @@ import { handleSearch } from "../../utils/Common";
 import { createEmployee, getEmployee } from "../../api/Function";
 import { toast } from "react-toastify";
 import Loader from "../../component/Loader";
+import { useNavigate } from "react-router";
+
 const Employee = ({showModal,onCloseModal=()=>{}}) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isFetchingEmp, setIsFetchingEmp] = useState(false);
   const [employeeList, setemployeeList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const navigate = useNavigate();
   const HandleAddEmployee = async (data) => {
     setIsCreating(true);
     try {
@@ -25,6 +27,11 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
       const res = await createEmployee(payload);
       if ((res.status = 200)) {
         toast.success("Employee added Successfully");
+      }
+      if (res?.status === 500) {
+        toast.error("Network error. Please re-login!");
+        localStorage.clear();
+        navigate("/login");
       }
     } catch (error) {
       console.log("error", error);
@@ -59,6 +66,11 @@ const Employee = ({showModal,onCloseModal=()=>{}}) => {
             setemployeeList(reorderedEmployees);
          
         }
+      if (res?.status === 500) {
+        toast.error("Network error. Please re-login!");
+        localStorage.clear();
+        navigate("/login");
+      }
     } catch (error) {
         console.log("Error while fetching employee data:", error);
     } finally {

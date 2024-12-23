@@ -11,7 +11,8 @@ const DataFile = ({
   isFileConvert,
   lastFileConverted,
   activeTab,
-  onTabSwitch = () => {}
+  onTabSwitch = () => { },
+  latestUploadFileUrl
 }) => {
   const [uploadsearchQuery, setUploadSearchQuery] = useState("");
   const [convertsearchQuery, setConvertSearchQuery] = useState("");
@@ -87,11 +88,16 @@ const DataFile = ({
             onClick={() => onTabSwitch("3")}
             className={`tab ${activeTab === "3" ? "active" : ""}`}
           >
-            Employee
+           Employees
           </div>
         </div>
+        {activeTab === "1" && latestUploadFileUrl && (
+          <button className="download" onClick={()=>onDownload("upload")}>
+            <img src={DownLoad} alt="download" /> Download
+          </button>
+        )}
         {activeTab === "2" && isFileConvert && (
-          <button className="download" onClick={onDownload}>
+          <button className="download" onClick={()=>onDownload("convert")}>
             <img src={DownLoad} alt="download" /> Download
           </button>
         )}

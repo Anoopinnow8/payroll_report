@@ -85,7 +85,7 @@ const Navbar = ({
                 className="icon"
                 lazy="loading"
               />
-              {isAutomatate ? "Automating..." : "Automate"}
+              {isAutomatate ? "In Progress" : "Automate"}
             </button>
           </div>
 

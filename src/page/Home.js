@@ -21,12 +21,12 @@ const Home = () => {
   const [curTab, setCurTab] = useState("1");
   const [uploadFile, setUploadFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
-  const [latestUploadFileUrl, setLatestUploadFileUrl] = useState("");
   const [lastUploadData, setLastUploadData] = useState([]);
   const [convertjsonData, setConvertJsonData] = useState([]);
   const [convertedFileUrl, setConvertedFileUrl] = useState("");
   const [autoMatedFileUrl, setAutoMatedFileUrl] = useState("");
   const [latestConvertedFileUrl, setLatestConvertedFileUrl] = useState("");
+  const [latestUploadFileUrl, setLatestUploadFileUrl] = useState("");
 
   const [lastConverted, setLastConverted] = useState("");
   const [lastAutoConverted, setLastAutoConverted] = useState("");
@@ -110,11 +110,17 @@ const Home = () => {
     );
   };
 
-  const handleConvertFileDownload = () => {
-    fetch(latestConvertedFileUrl)
+  const handleConvertFileDownload = (type) => {
+    const fileUrl = type === "upload" ? latestUploadFileUrl : latestConvertedFileUrl;
+    if (!fileUrl) {
+      console.error("File URL is missing");
+      return;
+    }
+    console.log(fileUrl,"fileUrlfileUrl")
+    fetch(fileUrl)
       .then((response) => response.blob())
       .then((blob) => {
-        const filename = latestConvertedFileUrl?.split("/").pop();
+        const filename = fileUrl?.split("/").pop();
         saveAs(blob, filename);
       })
       .catch((error) => console.error("Error downloading the file:", error));
@@ -248,7 +254,6 @@ const Home = () => {
   useEffect(() => {
     getLatestConvertedFile();
   }, [autoMatedFileUrl, convertedFileUrl]);
-
   const handleUploadCsvTojsonConvert = async (url) => {
     setisLoading(true);
     try {
@@ -279,7 +284,18 @@ const Home = () => {
   useEffect(() => {
     handleUploadCsvTojsonConvert(latestUploadFileUrl);
   }, [latestUploadFileUrl]);
-
+  useEffect(() => {
+    const today = new Date();
+    const lastWeekStart = new Date(today);
+    lastWeekStart.setDate(today.getDate() - 7);
+    setAutomateDateRange([
+      {
+        startDate: lastWeekStart,
+        endDate: today,
+        key: "selection",
+      },
+    ]);
+  }, []);
   return (
     <div className="main-container">
       <Navbar
@@ -321,6 +337,7 @@ const Home = () => {
         convertedTableData={convertjsonData}
         onDownload={handleConvertFileDownload}
         isFileConvert={latestConvertedFileUrl}
+        latestUploadFileUrl={latestUploadFileUrl}
         lastFileConverted={handleLastConvertedTime(
           latestConvertedTime
             ? latestConvertedTime

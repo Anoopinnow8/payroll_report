@@ -1,7 +1,6 @@
 .navbar-container {
   width: 100%;
   background-color: #ffede1;
-  
   height: 82px;
   display: flex;
   justify-content: space-between;
@@ -12,8 +11,12 @@
     justify-content: space-between;
     height: 100%;
     padding: 6px 10px ;
+    @media (min-width: 750px) and (max-width: 975px) {
+      width: calc(100% - 125px);
+
+    }
     .logo {
-      width: 200px;
+      width: 90px;
       height: 35px;
       object-fit: contain;
       mix-blend-mode: luminosity;
@@ -149,6 +152,12 @@
         display: flex;
         align-items: center;
         gap: 15px;
+        @media (min-width: 750px) and (max-width: 1020px) {
+          gap: 2px;
+       
+          flex-direction: column;
+  
+        }
         .date-picker {
           width: 200px;
           background-color: #fff;
@@ -186,11 +195,20 @@
     height: 100%;
     display: flex;
     
+    @media (min-width: 750px) and (max-width: 975px) {
+      width: 125px;
+    }
+    
     .rod{
       width: 15px;
       height: 100%;
       background-color: #FFC5A0;
       transform: skew(-17deg, 0deg);
+      @media (min-width: 750px) and (max-width: 975px) {
+        transform: skew(-9deg, 0deg);
+        width: 12px;
+
+      }
     }
     .user-box{
       height: 100%;
@@ -201,6 +219,11 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      @media (min-width: 750px) and (max-width: 975px) {
+        gap: 4px;
+        justify-content: end;
+
+      }
       .aroow{
         cursor: pointer;
       }
@@ -229,7 +252,12 @@
             width: 18px;
             height: 18px;
           }
-      
+          @media (min-width: 750px) and (max-width: 975px) {
+            width: 92px;
+            font: 700 14px/19.3px "Inter", sans-serif;
+            margin-right: 4px;
+
+          }
       }
     }
   }
